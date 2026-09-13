@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cancer Gene Mutation Atlas — 17 Genes Reference</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>">
+<style>
+:root {
+  --bg: #f4f1ec;
+  --card-bg: #ffffff;
+  --text: #1a1a2e;
+  --text-light: #555;
+  --text-muted: #888;
+  --oncogene: #c0392b;
+  --oncogene-light: #fdecea;
+  --oncogene-border: #e74c3c;
+  --suppressor: #2471a3;
+  --suppressor-light: #eaf2f8;
+  --suppressor-border: #2980b9;
+  --accent: #d4a017;
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --shadow-hover: 0 8px 30px rgba(0,0,0,0.15);
+  --radius: 14px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Georgia', 'Noto Serif SC', serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+/* ===== Header ===== */
+.header {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  color: #fff;
+  padding: 48px 24px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle at 30% 50%, rgba(192,57,43,0.15) 0%, transparent 50%),
+              radial-gradient(circle at 70% 50%, rgba(36,113,163,0.15) 0%, transparent 50%);
+  animation: drift 20s ease-in-out infinite alternate;
+}
+@keyframes drift { from { transform: translate(0,0); } to { transform: translate(-5%,3%); } }
+.header h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  position: relative;
+  margin-bottom: 8px;
+}
+.header .subtitle {
+  font-size: 1.05rem;
+  opacity: 0.8;
+  position: relative;
+  font-style: italic;
+}
+.legend {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-top: 24px;
+  position: relative;
+  flex-wrap: wrap;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+}
+.legend-dot {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  border: 2px solid;
+}
+.legend-dot.oncogene { background: var(--oncogene); border-color: var(--oncogene-border); }
+.legend-dot.suppressor { background: var(--suppressor); border-color: var(--suppressor-border); }
+/* ===== Controls ===== */
+.controls {
+  max-width: 1200px;
+  margin: -24px auto 0;
+  padding: 0 24px;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.search-box {
+  flex: 1;
+  min-width: 240px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 30px;
+  font-size: 0.95rem;
+  background: #fff;
+  box-shadow: var(--shadow);
+  outline: none;
+  font-family: inherit;
+}
+.search-box:focus { box-shadow: 0 0 0 3px rgba(212,160,23,0.3), var(--shadow); }
+.filter-btn {
+  padding: 10px 22px;
+  border: 2px solid #ddd;
+  border-radius: 30px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-family: inherit;
+  transition: all 0.2s;
+  box-shadow: var(--shadow);
+}
+.filter-btn:hover { border-color: var(--accent); }
+.filter-btn.active {
+  background: var(--text);
+  color: #fff;
+  border-color: var(--text);
+}
+/* ===== Gene Grid ===== */
+.gene-grid {
+  max-width: 1200px;
+  margin: 32px auto;
+  padding: 0 24px 60px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 24px;
+}
+/* ===== Gene Card ===== */
+.gene-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: transform 0.25s, box-shadow 0.25s;
+  border-top: 4px solid var(--oncogene);
+  display: flex;
+  flex-direction: column;
+}
+.gene-card.suppressor { border-top-color: var(--suppressor); }
+.gene-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+.card-header {
+  padding: 18px 20px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+.gene-name {
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+.gene-name .alt { font-size: 0.85rem; color: var(--text-muted); font-weight: 400; }
+.type-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.type-badge.oncogene { background: var(--oncogene-light); color: var(--oncogene); }
+.type-badge.suppressor { background: var(--suppressor-light); color: var(--suppressor); }
+.mutation-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  margin: 0 20px 14px;
+  background: #f8f6f2;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text);
+  width: fit-content;
+}
+.mutation-chip svg { flex-shrink: 0; }
+/* ===== Diagram Area ===== */
+.diagram-wrap {
+  padding: 0 20px 16px;
+}
+.diagram-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.diagram-box {
+  background: #fafaf7;
+  border-radius: 10px;
+  padding: 12px;
+  border: 1px solid #eee;
+}
+.diagram-box svg { width: 100%; height: auto; display: block; }
+/* ===== Info Sections ===== */
+.card-body {
+  padding: 0 20px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+.info-block {
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #f8f6f2;
+}
+.info-block h4 {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  font-weight: 700;
+}
+.info-block p {
+  font-size: 0.86rem;
+  color: var(--text);
+  line-height: 1.5;
+}
+.info-block.cancer { background: var(--oncogene-light); }
+.info-block.cancer h4 { color: var(--oncogene); }
+.gene-card.suppressor .info-block.cancer { background: var(--suppressor-light); }
+.gene-card.suppressor .info-block.cancer h4 { color: var(--suppressor); }
+.info-block.treatment {
+  background: #fef9e7;
+  border-left: 3px solid var(--accent);
+}
+.info-block.treatment h4 { color: #b7950b; }
+.freq-bar {
+  height: 6px;
+  background: #e0e0e0;
+  border-radius: 3px;
+  margin-top: 6px;
+  overflow: hidden;
+}
+.freq-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--oncogene);
+  transition: width 0.6s ease;
+}
+.gene-card.suppressor .freq-fill { background: var(--suppressor); }
+/* ===== Footer ===== */
+.footer {
+  text-align: center;
+  padding: 30px 24px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  border-top: 1px solid #ddd;
+  background: #ebe7e0;
+}
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .header h1 { font-size: 1.7rem; }
+  .gene-grid { grid-template-columns: 1fr; }
+  .controls { flex-direction: column; }
+  .search-box { width: 100%; }
+}
+/* ===== SVG diagram shared styles ===== */
+.svg-text { font-family: Georgia, serif; fill: #333; }
+.svg-label { font-size: 11px; font-weight: 600; }
+.svg-small { font-size: 9px; fill: #666; }
+.svg-arrow { stroke: #888; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead); }
+.svg-arrow-red { stroke: #c0392b; stroke-width: 2; fill: none; marker-end: url(#arrowred); }
+.svg-arrow-blue { stroke: #2471a3; stroke-width: 2; fill: none; marker-end: url(#arrowblue); }
+.svg-arrow-dashed { stroke: #aaa; stroke-width: 1.2; fill: none; stroke-dasharray: 4,3; marker-end: url(#arrowgray); }
+.svg-cross { stroke: #c0392b; stroke-width: 2.5; }
+</style>
+</head>
+<body>
+
+<!-- ===== Header ===== -->
+<header class="header">
+  <h1>Cancer Gene Mutation Atlas</h1>
+  <p class="subtitle">17 genes · mutation status · mechanism · cancer type · targeted therapy</p>
+  <div class="legend">
+    <div class="legend-item"><span class="legend-dot oncogene"></span> Oncogene 癌基因 (gain-of-function)</div>
+    <div class="legend-item"><span class="legend-dot suppressor"></span> Tumor Suppressor 抑癌基因 (loss-of-function)</div>
+  </div>
+</header>
+
+<!-- ===== Controls ===== -->
+<div class="controls">
+  <input type="text" class="search-box" id="searchInput" placeholder="Search gene name, cancer, or drug... 搜索基因/癌症/药物">
+  <button class="filter-btn active" data-filter="all">All</button>
+  <button class="filter-btn" data-filter="oncogene">Oncogenes</button>
+  <button class="filter-btn" data-filter="suppressor">Tumor Suppressors</button>
+</div>
+
+<!-- ===== Gene Grid ===== -->
+<main class="gene-grid" id="geneGrid">
+
+<!-- Shared SVG defs -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#888"/></marker>
+    <marker id="arrowred" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#c0392b"/></marker>
+    <marker id="arrowblue" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2471a3"/></marker>
+    <marker id="arrowgray" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#aaa"/></marker>
+    <marker id="arrowgreen" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#27ae60"/></marker>
+  </defs>
+</svg>
+
+<!-- ============ 1. RAS ============ -->
+<article class="gene-card" data-type="oncogene" data-search="ras kras hras nras pancreatic colorectal lung sotorasib adagrasib gtpase mapk">
+  <div class="card-header">
+    <div class="gene-name">Ras <span class="alt">(KRAS/HRAS/NRAS)</span></div>
+    <span class="type-badge oncogene">Oncogene</span>
+  </div>
+  <div class="mutation-chip">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+    Point Mutation (missense) · G12, G13, Q61
+  </div>
+  <div class="diagram-wrap">
+    <div class="diagram-label">Mechanism 机制图</div>
+    <div class="diagram-box">
+      <svg viewBox="0 0 300 130">
+        <!-- Normal side -->
+        <text x="75" y="14" text-anchor="middle" class="svg-label" fill="#27ae60">Normal</text>
+        <rect x="25" y="22" width="100" height="28" rx="6" fill="#eafaf1" stroke="#27ae60" stroke-width="1.5"/>
+        <text x="75" y="40" text-anchor="middle" class="svg-label">Ras-GDP (off)</text>
+        <path d="M75 50 L75 62" class="svg-arrow"/>
+        <rect x="25" y="64" width="100" height="28" rx="6" fill="#eafaf1" stroke="#27ae60" stroke-width="1.5"/>
+        <text x="75" y="82" text-anchor="middle" class="svg-label">Ras-GTP (on)</text>
+        <path d="M75 92 L75 104" class="svg-arrow"/>
+        <text x="75" y="118" text-anchor="middle" class="svg-small">→ MAPK / PI3K (controlled)</text>
+        <!-- Divider -->
+        <line x1="155" y1="10" x2="155" y2="125" stroke="#ddd" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- Mutant side -->
+        <text x="230" y="14" text-anchor="middle" class="svg-label" fill="#c0392b">Mutated</text>
+        <rect x="180" y="22" width="100" height="28" rx="6" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
+        <text x="230" y="40" text-anchor="middle" class="svg-label" fill="#c0392b">Ras-GTP (stuck on!)</text>
+        <path d="M230 50 L230 68" class="svg-arrow-red"/>
+        <text x="230" y="82" text-anchor="middle" class="svg-small" fill="#c0392b">GTP hydrolysis blocked</text>
+        <path d="M230 88 L230 100" class="svg-arrow-red"/>
+        <text x="230" y="118" text-anchor="middle" class="svg-small" fill="#c0392b">→ Uncontrolled proliferation!</text>
+      </svg>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="info-block">
+      <h4>Normal Function 正常功能</h4>
+      <p>Small GTPase (G蛋白): molecular switch transducing signals from RTK → MAPK & PI3K pathways. Cycles between GDP (off) and GTP (on).</p>
+    </div>
+    <div class="info-block">
+      <h4>Mutation Effect 突变影响</h4>
+      <p>Missense mutations block GTP hydrolysis → Ras trapped in GTP-bound active state → constitutive downstream signaling regardless of growth signals.</p>
+    </div>
+    <div class="info-block cancer">
+      <h4>Common Cancer 常见癌症</h4>
+      <p>Pancreatic ductal adenocarcinoma ~90% (KRAS)</p>
+      <div class="freq-bar"><div class="freq-fill" style="width:90%"></div></div>
+    </div>
+    <div class="info-block treatment">
+      <h4>Targeted Therapy 靶向治疗</h4>
+      <p>Sotorasib / Adagrasib (KRAS G12C inhibitors). Historically "undruggable"; G12C covalent inhibitors breakthrough.</p>
+    </div>
+  </div>
+</article>
+
+<!-- ============ 2. MYC ============ -->
+<article class="gene-card" data-type="oncogene" data-search="myc c-myc amplification translocation burkitt lymphoma neuroblastoma bet inhibitor transcription">
+  <div class="card-header">
+    <div class="gene-name">Myc <span class="alt">(c-Myc)</span></div>
+    <span class="type-badge oncogene">Oncogene</span>
+  </div>
+  <div class="mutation-chip">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>
+    Amplification / Translocation t(8;14)
+  </div>
+  <div class="diagram-wrap">
+    <div class="diagram-label">Mechanism 机制图</div>
+    <div class="diagram-box">
+      <svg viewBox="0 0 300 130">
+        <!-- Normal -->
+        <text x="75" y="14" text-anchor="middle" class="svg-label" fill="#27ae60">Normal</text>
+        <rect x="35" y="22" width="80" height="24" rx="5" fill="#eafaf1" stroke="#27ae60" stroke-width="1.5"/>
+        <text x="75" y="38" text-anchor="middle" class="svg-label">Myc (low, regulated)</text>
+        <path d="M75 46 L75 58" class="svg-arrow"/>
+        <text x="75" y="70" text-anchor="middle" class="svg-small">Cell cycle genes</text>
+        <text x="75" y="82" text-anchor="middle" class="svg-small">Metabolism genes</text>
+        <text x="75" y="94" text-anchor="middle" class="svg-small">Ribosome biogenesis</text>
+        <text x="75" y="112" text-anchor="middle" class="svg-small">→ Controlled growth</text>
+        <!-- Divider -->
+        <line x1="155" y1="10" x2="155" y2="125" stroke="#ddd" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- Mutant -->
+        <text x="230" y="14" text-anchor="middle" class="svg-label" fill="#c0392b">Mutated</text>
+        <rect x="185" y="22" width="90" height="24" rx="5" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
+        <text x="230" y="38" text-anchor="middle" class="svg-label" fill="#c0392b">Myc OVEREXPRESSED</text>
+        <path d="M230 46 L230 58" class="svg-arrow-red"/>
+        <text x="230" y="70" text-anchor="middle" class="svg-small" fill="#c0392b">All targets AMPLIFIED</text>
+        <text x="230" y="84" text-anchor="middle" class="svg-small">t(8;14): IgH enhancer</text>
+        <text x="230" y="96" text-anchor="middle" class="svg-small">drives Myc in B cells</text>
+        <text x="230" y="114" text-anchor="middle" class="svg-small" fill="#c0392b">→ Uncontrolled growth!</text>
+      </svg>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="info-block">
+      <h4>Normal Function 正常功能</h4>
+      <p>Transcription factor (转录因子): master regulator of cell cycle progression, metabolism, ribosome biogenesis, and protein synthesis. Rapidly turned over.</p>
+    </div>
+    <div class="info-block">
+      <h4>Mutation Effect 突变影响</h4>
+      <p>Gene amplification or translocation (IgH enhancer in Burkitt) → massive overexpression → global transcriptional amplification driving proliferation and biomass accumulation.</p>
+    </div>
+    <div class="info-block cancer">
+      <h4>Common Cancer 常见癌症</h4>
+      <p>Burkitt lymphoma ~100% (t(8;14) translocation)</p>
+      <div class="freq-bar"><div class="freq-fill" style="width:100%"></div></div>
+    </div>
+    <div class="info-block treatment">
+      <h4>Targeted Therapy 靶向治疗</h4>
+      <p>No direct FDA-approved Myc inhibitor. Indirect: BET inhibitors (JQ1, OTX015) block Myc transcription; OmoMYC dominant-negative peptide (clinical trials).</p>
+    </div>
+  </div>
+</article>
+
+<!-- ============ 3. PIK3CA ============ -->
+<article class="gene-card" data-type="oncogene" data-search="pik3ca pi3k p110 alpha breast endometrial colorectal alpelisib E545K H1047R pip3 akt">
+  <div class="card-header">
+    <div class="gene-name">PIK3CA <span class="alt">(p110α)</span></div>
+    <span class="type-badge oncogene">Oncogene</span>
+  </div>
+  <div class="mutation-chip">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+    Point Mutation · E542K / E545K / H1047R
+  </div>
+  <div class="diagram-wrap">
+    <div class="diagram-label">Mechanism 机制图</div>
+    <div class="diagram-box">
+      <svg viewBox="0 0 300 130">
+        <!-- Normal -->
+        <text x="75" y="14" text-anchor="middle" class="svg-label" fill="#27ae60">Normal</text>
+        <rect x="20" y="22" width="110" height="22" rx="5" fill="#eafaf1" stroke="#27ae60" stroke-width="1.5"/>
+        <text x="75" y="37" text-anchor="middle" class="svg-label">PI3K (needs RTK signal)</text>
+        <path d="M75 44 L75 54" class="svg-arrow"/>
+        <text x="75" y="66" text-anchor="middle" class="svg-small">PIP2 → PIP3</text>
+        <path d="M75 72 L75 82" class="svg-arrow"/>
+        <text x="75" y="94" text-anchor="middle" class="svg-small">→ AKT activation</text>
+        <text x="75" y="112" text-anchor="middle" class="svg-small">→ Growth & survival (controlled)</text>
+        <!-- Divider -->
+        <line x1="155" y1="10" x2="155" y2="125" stroke="#ddd" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- Mutant -->
+        <text x="230" y="14" text-anchor="middle" class="svg-label" fill="#c0392b">Mutated</text>
+        <rect x="175" y="22" width="110" height="22" rx="5" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
+        <text x="230" y="37" text-anchor="middle" class="svg-label" fill="#c0392b">PI3K (always active!)</text>
+        <path d="M230 44 L230 54" class="svg-arrow-red"/>
+        <text x="230" y="66" text-anchor="middle" class="svg-small" fill="#c0392b">PIP3 accumulates</text>
+        <path d="M230 72 L230 82" class="svg-arrow-red"/>
+        <text x="230" y="94" text-anchor="middle" class="svg-small" fill="#c0392b">→ AKT hyperactive</text>
+        <text x="230" y="112" text-anchor="middle" class="svg-small" fill="#c0392b">→ Survival & growth!</text>
+      </svg>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="info-block">
+      <h4>Normal Function 正常功能</h4>
+      <p>Catalytic subunit p110α of PI3K (磷脂酰肌醇3-激酶): phosphorylates PIP2 → PIP3 at membrane, recruiting and activating AKT. Requires upstream RTK/Ras signal.</p>
+    </div>
+    <div class="info-block">
+      <h4>Mutation Effect 突变影响</h4>
+      <p>Hotspot mutations in helical (E545K) or kinase (H1047R) domain → constitutive lipid kinase activity independent of upstream signals → PIP3 overproduction → AKT pathway hyperactivation.</p>
+    </div>
+    <div class="info-block cancer">
+      <h4>Common Cancer 常见癌症</h4>
+      <p>Breast cancer (HR+/HER2−) ~40%</p>
+      <div class="freq-bar"><div class="freq-fill" style="width:40%"></div></div>
+    </div>
+    <div class="info-block treatment">
+      <h4>Targeted Therapy 靶向治疗</h4>
+      <p>Alpelisib (Piqray) — PI3Kα-specific inhibitor, approved for HR+/HER2− metastatic breast cancer with PIK3CA mutation, combined with fulvestrant.</p>
+    </div>
+  </div>
+</article>
+
+<!-- ============ 4. MDM2 ============ -->
+<article class="gene-card" data-type="oncogene" data-search="mdm2 amplification liposarcoma p53 degradation ubiquitin ligase idasanutlin milademetan rg7112">
+  <div class="card-header">
+    <div class="gene-name">MDM2</div>
+    <span class="type-badge oncogene">Oncogene</span>
+  </div>
+  <div class="mutation-chip">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>
+    Gene Amplification (12q15)
+  </div>
+  <div class="diagram-wrap">
+    <div class="diagram-label">Mechanism 机制图</div>
+    <div class="diagram-box">
+      <svg viewBox="0 0 300 130">
+        <!-- Normal -->
+        <text x="75" y="14" text-anchor="middle" class="svg-label" fill="#27ae60">Normal</text>
+        <circle cx="50" cy="45" r="16" fill="#eaf2f8" stroke="#2471a3" stroke-width="1.5"/>
+        <text x="50" y="49" text-anchor="middle" class="svg-label" fill="#2471a3">p53</text>
+        <circle cx="100" cy="45" r="14" fill="#fef9e7" stroke="#b7950b" stroke-width="1.5"/>
+        <text x="100" y="49" text-anchor="middle" class="svg-small" fill="#b7950b">MDM2</text>
+        <path d="M66 45 L86 45" class="svg-arrow-dashed"/>
+        <text x="75" y="38" text-anchor="middle" class="svg-small">binds</text>
+        <path d="M100 59 L100 72" class="svg-arrow"/>
+        <text x="100" y="84" text-anchor="middle" class="svg-small">ubiquitin → degrade</text>
+        <text x="75" y="104" text-anchor="middle" class="svg-small">p53 levels kept in check</text>
+        <text x="75" y="118" text-anchor="middle" class="svg-small">→ Balance maintained</text>
+        <!-- Divider -->
+        <line x1="155" y1="10" x2="155" y2="125" stroke="#ddd" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- Mutant -->
+        <text x="230" y="14" text-anchor="middle" class="svg-label" fill="#c0392b">Mutated (Amplified)</text>
+        <circle cx="195" cy="45" r="16" fill="#fdecea" stroke="#c0392b" stroke-width="1.5"/>
+        <text x="195" y="49" text-anchor="middle" class="svg-label" fill="#c0392b">p53</text>
+        <circle cx="245" cy="35" r="13" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
+        <circle cx="265" cy="55" r="13" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
+        <text x="255" y="48" text-anchor="middle" class="svg-small" fill="#c0392b">MDM2×!</text>
+        <path d="M211 45 L232 40" class="svg-arrow-red"/>
+        <text x="225" y="30" text-anchor="middle" class="svg-small" fill="#c0392b">too much!</text>
+        <path d="M255 60 L255 74" class="svg-arrow-red"/>
+        <text x="255" y="86" text-anchor="middle" class="svg-small" fill="#c0392b">p53 destroyed</text>
+        <text x="230" y="106" text-anchor="middle" class="svg-small" fill="#c0392b">No p53 checkpoint!</text>
+        <text x="230" y="120" text-anchor="middle" class="svg-small" fill="#c0392b">→ Damaged cells survive</text>
+      </svg>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="info-block">
+      <h4>Normal Function 正常功能</h4>
+      <p>E3 ubiquitin ligase (E3泛素连接酶): binds p53, ubiquitinates it → proteasomal degradation. Key negative regulator keeping p53 levels low under normal conditions. Negative feedback loop.</p>
+    </div>
+    <div class="info-block">
+      <h4>Mutation Effect 突变影响</h4>
+      <p>Gene amplification → MDM2 overproduction → excessive p53 ubiquitination and degradation → p53 tumor suppressor pathway functionally inactivated even when TP53 itself is wild-type.</p>
+    </div>
+    <div class="info-block cancer">
+      <h4>Common Cancer 常见癌症</h4>
+      <p>Well-differentiated / dedifferentiated liposarcoma ~90%</p>
+      <div class="freq-bar"><div class="freq-fill" style="width:90%"></div></div>
+    </div>
+    <div class="info-block treatment">
+      <h4>Targeted Therapy 靶向治疗</h4>
+      <p>MDM2-p53 interaction inhibitors: Idasanutlin (RG7388), Milademetan (DS-3032b), Siremadlin. Restore p53 by blocking MDM2 binding. Clinical trials; milademetan approved in some regions.</p>
+    </div>
+  </div>
+</article>
+
+<!-- ============ 5. AKT ============ -->
+<article class="gene-card" data-type="oncogene" data-search="akt akt1 akt2 akt3 E17K amplification breast ovarian capivasertib ipatasertib pi3k mtor survival">
+  <div class="card-header">
+    <div class="gene-name">AKT <span class="alt">(AKT1/2/3, PKB)</span></div>
+    <span class="type-badge oncogene">Oncogene</span>
+  </div>
+  <div class="mutation-chip">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+    Point Mutation (AKT1 E17K) / Amplification
+  </div>
+  <div class="diagram-wrap">
+    <div class="diagram-label">Mechanism 机制图</div>
+    <div class="diagram-box">
+      <svg viewBox="0 0 300 130">
+        <!-- Normal -->
+        <text x="75" y="14" text-anchor="middle" class="svg-label" fill="#27ae60">Normal</text>
+        <rect x="30" y="22" width="90" height="22" rx="5" fill="#eafaf1" stroke="#27ae60" stroke-width="1.5"/>
+        <text x="75" y="37" text-anchor="middle" class="svg-label">AKT (cytoplasm, off)</text>
+        <path d="M75 44 L75 54" class="svg-arrow"/>
+        <text x="75" y="64" text-anchor="middle" class="svg-small">PIP3 recruits to membrane</text>
+        <text x="75" y="76" text-anchor="middle" class="svg-small">PDK1/2 phosphorylate → ON</text>
+        <path d="M75 82 L75 92" class="svg-arrow"/>
+        <text x="75" y="104" text-anchor="middle" class="svg-small">→ Survival, growth, glucose</text>
+        <text x="75" y="118" text-anchor="middle" class="svg-small">→ Signal-dependent</text>
+        <!-- Divider -->
+        <line x1="155" y1="10" x2="155" y2="125" stroke="#ddd" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- Mutant -->
+        <text x="230" y="14" text-anchor="middle" class="svg-label" fill="#c0392b">Mutated (E17K)</text>
+        <rect x="180" y="22" width="100" height="22" rx="5" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
+        <text x="230" y="37" text-anchor="middle" class="svg-label" fill="#c0392b">AKT (membrane, stuck!)</text>
+        <path d="M230 44 L230 54" class="svg-arrow-red"/>
+        <text x="230" y="66" text-anchor="middle" class="svg-small" fill="#c0392b">E17K = constitutive</text>
+        <text x="230" y="78" text-anchor="middle" class="svg-small" fill="#c0392b">membrane localization</text>
+        <path d="M230 84 L230 94" class="svg-arrow-red"/>
+        <text x="230" y="106" text-anchor="middle" class="svg-small" fill="#c0392b">→ Always phosphorylated</text>
+        <text x="230" y="120" text-anchor="middle" class="svg-small" fill="#c0392b">→ Survival & growth!</text>
+      </svg>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="info-block">
+      <h4>Normal Function 正常功能</h4>
+      <p>Serine/threonine kinase (丝氨酸/苏氨酸激酶): central node downstream of PI3K. Phosphorylates targets (mTOR, GSK3β, BAD, FoxO) to promote survival, growth, glucose uptake, and metabolism.</p>
+    </div>
+    <div class="info-block">
+      <h4>Mutation Effect 突变影响</h4>
+      <p>AKT1 E17K mutation in PH domain → constitutive plasma membrane recruitment independent of PIP3 → persistent phosphorylation/activation. AKT2/AKT3 amplification → overexpression → pathway hyperactivation.</p>
+    </div>
+    <div class="info-block cancer">
+      <h4>Common Cancer 常见癌症</h4>
+      <p>Breast cancer (AKT1 E17K) ~3–5%; also ovarian, colorectal</p>
+      <div class="freq-bar"><div class="freq-fill" style="width:5%"></div></div>
+    </div>
+    <div class="info-block treatment">
+      <h4>Targeted Therapy 靶向治疗</h4>
+      <p>Capivasertib (Truqap) — AKT inhibitor approved for HR+/HER2− breast cancer with PIK3CA/AKT1/PTEN alteration. Ipatasertib, Afuresertib in trials.</p>
+    </div>
+  </div>
+</article>
+
+<!-- ============ 6. CYCLIN D ============ -->
+<article class="gene-card" data-type="oncogene" data-search="cyclin d ccnd1 ccnd2 ccnd3 amplification translocation mantle cell lymphoma breast cdk4 cdk6 palbociclib ribociclib">
+  <div class="card-header">
+    <div class="gene-name">Cyclin D <span class="alt">(CCND1/2/3)</span></div>
+    <span class="type-badge oncogene">Oncogene</span>
+  </div>
+  <div class="mutation-chip">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>
+    Amplification / Translocation t(11;14)
+  </div>
+  <div class="diagram-wrap">
+    <div class="diagram-label">Mechanism 机制图</div>
+    <div class="diagram-box">
+      <svg viewBox="0 0 300 130">
+        <!-- Normal -->
+        <text x="75" y="14" text-anchor="middle" class="svg-label" fill="#27ae60">Normal (G1 phase)</text>
+        <rect x="25" y="22" width="100" height="22" rx="5" fill="#eafaf1" stroke="#27ae60" stroke-width="1.5"/>
+        <text x="75" y="37" text-anchor="middle" class="svg-label">Cyclin D + CDK4/6</text>
+        <path d="M75 44 L75 54" class="svg-arrow"/>
+        <rect x="30" y="56" width="90" height="20" rx="4" fill="#fef9e7" stroke="#b7950b" stroke-width="1"/>
+        <text x="75" y="70" text-anchor="middle" class="svg-small">phosphorylate Rb</text>
+        <path d="M75 76 L75 86" class="svg-arrow"/>
+        <text x="75" y="98" text-anchor="middle" class="svg-small">Rb releases E2F</text>
+        <text x="75" y="114" text-anchor="middle" class="svg-small">→ S phase entry (controlled)</text>
+        <!-- Divider -->
+        <line x1="155" y1="10" x2="155" y2="125" stroke="#ddd" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- Mutant -->
+        <text x="230" y="14" text-anchor="middle" class="svg-label" fill="#c0392b">Mutated</text>
+        <rect x="175" y="22" width="110" height="22" rx="5" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
+        <text x="230" y="37" text-anchor="middle" class="svg-label" fill="#c0392b">Cyclin D OVEREXPRESSED</text>
+        <path d="M230 44 L230 54" class="svg-arrow-red"/>
+        <rect x="180" y="56" width="100" height="20" rx="4" fill="#fdecea" stroke="#c0392b" stroke-width="1.5"/>
+        <text x="230" y="70" text-anchor="middle" class="svg-small" fill="#c0392b">Rb hyper-phosphorylated</text>
+        <path d="M230 76 L230 86" class="svg-arrow-red"/>
+        <text x="230" y="98" text-anchor="middle" class="svg-small" fill="#c0392b">E2F always free</text>
+        <text x="230" y="114" text-anchor="middle" class="svg-small" fill="#c0392b">→ Continuous S phase!</text>
+      </svg>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="info-block">
+      <h4>Normal Function 正常功能</h4>
+      <p>Regulatory subunit (调节亚基): binds and activates CDK4/6. Cyclin D-CDK4/6 complex phosphorylates Rb protein → releases E2F transcription factor → drives G1→S phase transition. Mitogen-responsive.</p>
+    </div>
+    <div class="info-block">
+      <h4>Mutation Effect 突变影响</h4>
+      <p>CCND1 amplification or t(11;14) translocation (IgH enhancer in mantle cell lymphoma) → Cyclin D1 overexpression → excessive CDK4/6 activation → Rb constitutively phosphorylated → uncontrolled G1/S progression and proliferation.</p>
+    </div>
+    <div class="info-block cancer">
+      <h4>Common Cancer 常见癌症</h4>
+      <p>Mantle cell lymphoma ~100% (t(11;14))</p>
+      <div class="freq-bar"><div class="freq-fill" style="width:100%"></div></div>
+    </div>
+    <div class="info-block treatment">
+      <h4>Targeted Therapy 靶向治疗</h4>
+      <p>CDK4/6 inhibitors (indirectly target Cyclin D pathway): Palbociclib (Ibrance), Ribociclib (Kisqali), Abemaciclib (Verzenio) — standard for HR+/HER2− metastatic breast cancer.</p>
+    </div>
+  </div>
+</article>
+
+<!-- ============ 7. CDK6 ============ -->
+<article class="gene-card" data-type="oncogene" data-search="cdk6 amplification glioblastoma lymphoma leukemia breast palbociclib ribociclib abemaciclib cell cycle rb phosphorylation">
+  <div class="card-header">
+    <div class="gene-name">CDK6</div>
+    <span class="type-badge oncogene">Oncogene</span>
+  </div>
+  <div class="mutation-chip">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>
+    Amplification / Overexpression
+  </div>
+  <div class="diagram-wrap">
+    <div class="diagram-label">Mechanism 机制图</div>
+    <div class="diagram-box">
+      <svg viewBox="0 0 300 130">
+        <!-- Normal -->
+        <text x="75" y="14" text-anchor="middle" class="svg-label" fill="#27ae60">Normal</text>
+        <circle cx="50" cy="42" r="15" fill="#eafaf1" stroke="#27ae60" stroke-width="1.5"/>
+        <text x="50" y="46" text-anchor="middle" class="svg-small">CyclinD</text>
+        <circle cx="95" cy="42" r="15" fill="#eafaf1" stroke="#27ae60" stroke-width="1.5"/>
+        <text x="95" y="46" text-anchor="middle" class="svg-small">CDK6</text>
+        <path d="M65 42 L80 42" stroke="#27ae60" stroke-width="1.5"/>
+        <path d="M72 52 L72 62" class="svg-arrow"/>
+        <rect x="30" y="64" width="85" height="18" rx="4" fill="#fef9e7" stroke="#b7950b" stroke-width="1"/>
+        <text x="72" y="77" text-anchor="middle" class="svg-small">Rb phosphorylation</text>
+        <path d="M72 82 L72 92" class="svg-arrow"/>
+        <text x="72" y="104" text-anchor="middle" class="svg-small">→ G1→S transition</text>
+        <text x="72" y="118" text-anchor="middle" class="svg-small">→ Regulated by mitogens</text>
+        <!-- Divider -->
+        <line x1="155" y1="10" x2="155" y2="125" stroke="#ddd" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- Mutant -->
+        <text x="230" y="14" text-anchor="middle" class="svg-label" fill="#c0392b">Mutated (Amplified)</text>
+        <circle cx="195" cy="38" r="14" fill="#fdecea" stroke="#c0392b" stroke-width="1.5"/>
+        <text x="195" y="42" text-anchor="middle" class="svg-small">CyclinD</text>
+        <circle cx="240" cy="30" r="14" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
+        <circle cx="260" cy="50" r="14" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
+        <text x="250" y="44" text-anchor="middle" class="svg-small" fill="#c0392b">CDK6×!</text>
+        <path d="M210 38 L226 34" class="svg-arrow-red"/>
+        <path d="M248 58 L248 70" class="svg-arrow-red"/>
+        <rect x="195" y="72" width="100" height="18" rx="4" fill="#fdecea" stroke="#c0392b" stroke-width="1.5"/>
+        <text x="245" y="85" text-anchor="middle" class="svg-small" fill="#c0392b">Rb hyper-phosphorylated</text>
+        <path d="M245 90 L245 100" class="svg-arrow-red"/>
+        <text x="245" y="112" text-anchor="middle" class="svg-small" fill="#c0392b">→ Uncontrolled division!</text>
+        <text x="245" y="124" text-anchor="middle" class="svg-small" fill="#c0392b">(also immune: CDK6 in T cells)</text>
+      </svg>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="info-block">
+      <h4>Normal Function 正常功能</h4>
+      <p>Serine/threonine kinase (丝氨酸/苏氨酸激酶): partners with Cyclin D to phosphorylate Rb in G1 phase, promoting cell cycle entry. Also has kinase-independent roles in hematopoiesis and immune regulation.</p>
+    </div>
+    <div class="info-block">
+      <h4>Mutation Effect 突变影响</h4>
+      <p>Gene amplification or transcriptional upregulation → excess CDK6 protein → increased Rb phosphorylation even without sufficient mitogenic signals → accelerated G1/S transition and unchecked proliferation.</p>
+    </div>
+    <div class="info-block cancer">
+      <h4>Common Cancer 常见癌症</h4>
+      <p>Glioblastoma ~10% (CDK6 amplification); also lymphoma, leukemia</p>
+      <div class="freq-bar"><div class="freq-fill" style="width:10%"></div></div>
+    </div>
+    <div class="info-block treatment">
+      <h4>Targeted Therapy 靶向治疗</h4>
+      <p>CDK4/6 inhibitors: Palbociclib, Ribociclib, Abemaciclib. Abemaciclib has higher CDK6 selectivity. Used in HR+/HER2− breast cancer; trials in glioblastoma and lymphoma.</p>
+    </div>
+  </div>
+</article>
+
+<!-- ============ 8. BETA-CATENIN ============ -->
+<article class="gene-card" data-type="oncogene" data-search="beta catenin ctnnb1 mutation wnt colorectal hepatocellular endometrial desmoid gsk3 destruction complex tcf lef">
+  <div class="card-header">
+    <div class="gene-name">β-catenin <span class="alt">(CTNNB1)</span></div>
+    <span class="type-badge oncogene">Oncogene</span>
+  </div>
+  <div class="mutation-chip">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+    Point Mutation (N-terminal, S33/S37/T41/S45)
+  </div>
+  <div class="diagram-wrap">
+    <div class="diagram-label">Mechanism 机制图</div>
+    <div class="diagram-box">
+      <svg viewBox="0 0 300 130">
+        <!-- Normal -->
+        <text x="75" y="14" text-anchor="middle" class="svg-label" fill="#27ae60">Normal (no Wnt)</text>
+        <rect x="15" y="22" width="120" height="24" rx="5" fill="#eaf2f8" stroke="#2471a3" stroke-width="1.5"/>
+        <text x="75" y="38" text-anchor="middle" class="svg-small">Destruction complex (APC/Axin/GSK3)</text>
+        <path d="M75 46 L75 56" class="svg-arrow"/>
+        <rect x="30" y="58" width="90" height="18" rx="4" fill="#fef9e7" stroke="#b7950b" stroke-width="1"/>
+        <text x="75" y="71" text-anchor="middle" class="svg-small">β-cat phosphorylated</text>
+        <path d="M75 76 L75 86" class="svg-arrow"/>
+        <text x="75" y="98" text-anchor="middle" class="svg-small">→ ubiquitinated → degraded</text>
+        <text x="75" y="114" text-anchor="middle" class="svg-small">→ Low β-catenin, no Wnt genes</text>
+        <!-- Divider -->
+        <line x1="155" y1="10" x2="155" y2="125" stroke="#ddd" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- Mutant -->
+        <text x="230" y="14" text-anchor="middle" class="svg-label" fill="#c0392b">Mutated</text>
+        <rect x="175" y="22" width="110" height="24" rx="5" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
+        <text x="230" y="38" text-anchor="middle" class="svg-small" fill="#c0392b">β-cat (mutated N-term!)</text>
+        <path d="M230 46 L230 56" class="svg-arrow-red"/>
+        <text x="230" y="68" text-anchor="middle" class="svg-small" fill="#c0392b">GSK3 can't phosphorylate</text>
+        <text x="230" y="80" text-anchor="middle" class="svg-small" fill="#c0392b">→ No degradation!</text>
+        <path d="M230 86 L230 96" class="svg-arrow-red"/>
+        <text x="230" y="108" text-anchor="middle" class="svg-small" fill="#c0392b">Nuclear β-cat + TCF/LEF</text>
+        <text x="230" y="122" text-anchor="middle" class="svg-small" fill="#c0392b">→ Wnt genes always ON!</text>
+      </svg>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="info-block">
+      <h4>Normal Function 正常功能</h4>
+      <p>Dual-function protein (双重功能蛋白): (1) Cell adhesion — links cadherins to actin cytoskeleton; (2) Wnt signaling effector — when stabilized, translocates to nucleus and co-activates TCF/LEF transcription of proliferation genes.</p>
+    </div>
+    <div class="info-block">
+      <h4>Mutation Effect 突变影响</h4>
+      <p>N-terminal missense mutations destroy GSK3β phosphorylation sites (S33, S37, T41, S45) → β-catenin escapes ubiquitination and proteasomal degradation → accumulates in nucleus → constitutive Wnt target gene transcription independent of Wnt ligand.</p>
+    </div>
+    <div class="info-block cancer">
+      <h4>Common Cancer 常见癌症</h4>
+      <p>Hepatocellular carcinoma ~20–30%; also desmoid tumors, endometrial</p>
+      <div class="freq-bar"><div class="freq-fill" style="width:25%"></div></div>
+    </div>
+    <div class="info-block treatment">
+      <h4>Targeted Therapy 靶向治疗</h4>
+      <p>No FDA-approved direct β-catenin inhibitor. Wnt pathway inhibitors in trials: Porcupine inhibitors (LGK974/WNT974), tankyrase inhibitors, BC2059 (tegatrabetan). Surgery/NSAIDs for desmoid.</p>
+    </div>
+  </div>
+</article>
+
+<!-- ============ 9. ERBB2 / HER2 ============ -->
+<article class="gene-card" data-type="oncogene" data-search="erbb2 her2 neu amplification breast gastric trastuzumab pertuzumab t-dm1 t-dxd lapatinib neratinib tucatinib receptor tyrosine kinase">
+  <div class="card-header">
+    <div class="gene-name">ERBB2 <span class="alt">(HER2/Neu)</span></div>
+    <span class="type-badge oncogene">Oncogene</span>
+  </div>
+  <div class="mutation-chip">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>
+    Amplification (HER2+) / Point Mutation
+  </div>
+  <div class="diagram-wrap">
+    <div class="diagram-label">Mechanism 机制图</div>
+    <div class="diagram-box">
+      <svg viewBox="0 0 300 130">
+        <!-- Normal -->
+        <text x="75" y="14" text-anchor="middle" class="svg-label" fill="#27ae60">Normal</text>
+        <rect x="40" y="24" width="70" height="30" rx="4" fill="#eafaf1" stroke="#27ae60" stroke-width="1.5"/>
+        <text x="75" y="43" text-anchor="middle" class="svg-small">HER2 (low level)</text>
+        <path d="M75 54 L75 64" class="svg-arrow"/>
+        <text x="75" y="76" text-anchor="middle" class="svg-small">Heterodimer w/ HER1/3/4</text>
+        <text x="75" y="88" text-anchor="middle" class="svg-small">→ PI3K/AKT & MAPK</text>
+        <text x="75" y="104" text-anchor="middle" class="svg-small">→ Ligand-dependent</text>
+        <text x="75" y="118" text-anchor="middle" class="svg-small">→ Controlled growth</text>
+        <!-- Divider -->
+        <line x1="155" y1="10" x2="155" y2="125" stroke="#ddd" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- Mutant -->
+        <text x="230" y="14" text-anchor="middle" class="svg-label" fill="#c0392b">Mutated (Amplified)</text>
+        <rect x="175" y="20" width="35" height="26" rx="3" fill="#fdecea" stroke="#c0392b" stroke-width="1.5"/>
+        <rect x="215" y="20" width="35" height="26" rx="3" fill="#fdecea" stroke="#c0392b" stroke-width="1.5"/>
+        <rect x="255" y="20" width="35" height="26" rx="3" fill="#fdecea" stroke="#c0392b" stroke-width="1.5"/>
+        <text x="240" y="37" text-anchor="middle" class="svg-small" fill="#c0392b">HER2 × many!</text>
+        <path d="M240 46 L240 58" class="svg-arrow-red"/>
+        <text x="240" y="70" text-anchor="middle" class="svg-small" fill="#c0392b">Spontaneous homodimers</text>
+        <text x="240" y="82" text-anchor="middle" class="svg-small" fill="#c0392b">No ligand needed!</text>
+        <path d="M240 88 L240 98" class="svg-arrow-red"/>
+        <text x="240" y="110" text-anchor="middle" class="svg-small" fill="#c0392b">→ PI3K/AKT & MAPK always ON</text>
+        <text x="240" y="124" text-anchor="middle" class="svg-small" fill="#c0392b">→ Uncontrolled proliferation!</text>
+      </svg>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="info-block">
+      <h4>Normal Function 正常功能</h4>
+      <p>Receptor tyrosine kinase (受体酪氨酸激酶): EGFR/ERBB family member. No known ligand; preferred heterodimerization partner for HER1/3/4. Activates PI3K/AKT and RAS/MAPK pathways to drive proliferation and survival.</p>
+    </div>
+    <div class="info-block">
+      <h4>Mutation Effect 突变影响</h4>
+      <p>ERBB2 gene amplification → 10–100× more HER2 protein on cell surface → spontaneous homodimerization and constitutive kinase activation without ligand → persistent downstream signaling → aggressive proliferation and survival.</p>
+    </div>
+    <div class="info-block cancer">
+      <h4>Common Cancer 常见癌症</h4>
+      <p>Breast cancer ~15–20% (HER2+ subtype)</p>
+      <div class="freq-bar"><div class="freq-fill" style="width:18%"></div></div>
+    </div>
+    <div class="info-block treatment">
+      <h4>Targeted Therapy 靶向治疗</h4>
+      <p>Trastuzumab (Herceptin), Pertuzumab, T-DM1 (Kadcyla), T-DXd (Enhertu), Lapatinib, Neratinib, Tucatinib, Margetuximab. HER2 is one of the most successfully targeted oncoproteins.</p>
+    </div>
+  </div>
+</article>
+
+<!-- ============ 10. HIF1A ============ -->
+<article class="gene-card" data-type="oncogene" data-search="hif1a hypoxia inducible factor stabilization renal cell carcinoma vhl angiogenesis glycolysis belzutifan bevacizumab vegf erythropoiesis">
+  <div class="card-header">
+    <div class="gene-name">HIF1A <span class="alt">(HIF-1α)</span></div>
+    <span class="type-badge oncogene">Oncogene (stabilized)</span>
+  </div>
+  <div class="mutation-chip">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+    Stabilization / Overexpression (rare direct mutation)
+  </div>
+  <div class="diagram-wrap">
+    <div class="diagram-label">Mechanism 机制图</div>
+    <div class="diagram-box">
+      <svg viewBox="0 0 300 130">
+        <!-- Normal (normoxia) -->
+        <text x="75" y="14" text-anchor="middle" class="svg-label" fill="#27ae60">Normal (Normoxia)</text>
+        <rect x="25" y="22" width="100" height="22" rx="5" fill="#eafaf1" stroke="#27ae60" stroke-width="1.5"/>
+        <text x="75" y="37" text-anchor="middle" class="svg-label">HIF-1α (made)</text>
+        <path d="M75 44 L75 54" class="svg-arrow"/>
+        <rect x="20" y="56" width="110" height="18" rx="4" fill="#eaf2f8" stroke="#2471a3" stroke-width="1"/>
+        <text x="75" y="69" text-anchor="middle" class="svg-small">VHL + O2 → hydroxylate</text>
+        <path d="M75 74 L75 84" class="svg-arrow"/>
+        <text x="75" y="96" text-anchor="middle" class="svg-small">→ ubiquitinated → degraded</text>
+        <text x="75" y="112" text-anchor="middle" class="svg-small">→ No hypoxic response genes</text>
+        <!-- Divider -->
+        <line x1="155" y1="10" x2="155" y2="125" stroke="#ddd" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- Mutant (stabilized) -->
+        <text x="230" y="14" text-anchor="middle" class="svg-label" fill="#c0392b">Stabilized (VHL loss)</text>
+        <rect x="175" y="22" width="110" height="22" rx="5" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
+        <text x="230" y="37" text-anchor="middle" class="svg-label" fill="#c0392b">HIF-1α accumulates!</text>
+        <path d="M230 44 L230 54" class="svg-arrow-red"/>
+        <text x="230" y="66" text-anchor="middle" class="svg-small" fill="#c0392b">No VHL → no degradation</text>
+        <path d="M230 72 L230 82" class="svg-arrow-red"/>
+        <text x="230" y="94" text-anchor="middle" class="svg-small" fill="#c0392b">Nuclear HIF-1 + HIF-1β</text>
+        <text x="230" y="108" text-anchor="middle" class="svg-small" fill="#c0392b">→ VEGF, GLUT1, EPO genes ON</text>
+        <text x="230" y="122" text-anchor="middle" class="svg-small" fill="#c0392b">→ Angiogenesis & glycolysis!</text>
+      </svg>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="info-block">
+      <h4>Normal Function 正常功能</h4>
+      <p>Transcription factor α-subunit (转录因子α亚基): master regulator of cellular response to hypoxia (低氧). Heterodimerizes with HIF-1β (ARNT) to activate genes for angiogenesis (VEGF), glycolysis (GLUT1), erythropoiesis (EPO), and survival.</p>
+    </div>
+    <div class="info-block">
+      <h4>Mutation Effect 突变影响</h4>
+      <p>Rarely directly mutated. Typically stabilized by VHL loss-of-function (see VHL card) or tumor hypoxia. Under normoxia, HIF-1α is hydroxylated and VHL-targeted for degradation. Loss of VHL → HIF-1α constitutively stable → pseudo-hypoxic response → angiogenesis and metabolic reprogramming fueling tumor growth.</p>
+    </div>
+    <div class="info-block cancer">
+      <h4>Common Cancer 常见癌症</h4>
+      <p>Clear cell renal cell carcinoma (via VHL loss) ~70–90%</p>
+      <div class="freq-bar"><div class="freq-fill" style="width:80%"></div></div>
+    </div>
+    <div class="info-block treatment">
+      <h4>Targeted Therapy 靶向治疗</h4>
+      <p>Indirect: Anti-angiogenics (Bevacizumab anti-VEGF, Sunitinib, Pazopanib, Axitinib). HIF-2α-specific inhibitor Belzutifan (Welireg) approved for VHL disease/ccRCC (targets HIF2A paralog, not HIF1A directly).</p>
+    </div>
+  </div>
+</article>
+
+<!-- ============ 11. p21 / CDKN1A ============ -->
+<article class="gene-card" data-type="suppressor" data-search="p21 cdkn1a cip1 deletion downregulation cell cycle checkpoint cdk inhibitor p53 target endometrial prostate lung colorectal senescence">
+  <div class="card-header">
+    <div class="gene-name">p21 <span class="alt">(CDKN1A / CIP1)</span></div>
+    <span class="type-badge suppressor">Tumor Suppressor</span>
+  </div>
+  <div class="mutation-chip">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2471a3" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/><line x1="6" y1="3" x2="6" y2="21" stroke="#2471a3" stroke-width="2"/></svg>
+    Deletion / Downregulation / Epigenetic silencing
+  </div>
+  <div class="diagram-wrap">
+    <div class="diagram-label">Mechanism 机制图</div>
+    <div class="diagram-box">
+      <svg viewBox="0 0 300 130">
+        <!-- Normal -->
+        <text x="75" y="14" text-anchor="middle" class="svg-label" fill="#27ae60">Normal (DNA damage)</text>
+        <circle cx="50" cy="40" r="14" fill="#eaf2f8" stroke="#2471a3" stroke-width="1.5"/>
+        <text x="50" y="44" text-anchor="middle" class="svg-small" fill="#2471a3">p53</text>
+        <path d="M64 40 L80 40" class="svg-arrow-blue"/>
+        <rect x="82" y="30" width="55" height="20" rx="4" fill="#eaf2f8" stroke="#2471a3" stroke-width="1.5"/>
+        <text x="110" y="44" text-anchor="middle" class="svg-small">p21 made</text>
+        <path d="M110 50 L110 60" class="svg-arrow-blue"/>
+        <rect x="60" y="62" width="100" height="18" rx="4" fill="#fef9e7" stroke="#b7950b" stroke-width="1"/>
+        <text x="110" y="75" text-anchor="middle" class="svg-small">p21 inhibits Cyclin-CDK</text>
+        <path d="M110 80 L110 90" class="svg-arrow-blue"/>
+        <text x="110" y="102" text-anchor="middle" class="svg-small">→ Cell cycle ARREST at G1</text>
+        <text x="110" y="116" text-anchor="middle" class="svg-small">→ Time for DNA repair</text>
+        <!-- Divider -->
+        <line x1="155" y1="10" x2="155" y2="125" stroke="#ddd" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- Mutant -->
+        <text x="230" y="14" text-anchor="middle" class="svg-label" fill="#c0392b">Lost / Downregulated</text>
+        <circle cx="195" cy="40" r="14" fill="#fdecea" stroke="#c0392b" stroke-width="1.5"/>
+        <text x="195" y="44" text-anchor="middle" class="svg-small" fill="#c0392b">p53</text>
+        <path d="M209 40 L225 40" class="svg-arrow-dashed"/>
+        <rect x="227" y="30" width="55" height="20" rx="4" fill="#f5f5f5" stroke="#ccc" stroke-width="1" stroke-dasharray="3,2"/>
+        <text x="255" y="44" text-anchor="middle" class="svg-small" fill="#999">no p21!</text>
+        <path d="M255 50 L255 62" class="svg-arrow-red"/>
+        <text x="255" y="74" text-anchor="middle" class="svg-small" fill="#c0392b">CDK stays active</text>
+        <path d="M255 80 L255 90" class="svg-arrow-red"/>
+        <text x="255" y="102" text-anchor="middle" class="svg-small" fill="#c0392b">→ No G1 checkpoint!</text>
+        <text x="255" y="116" text-anchor="middle" class="svg-small" fill="#c0392b">→ Damaged DNA replicates!</text>
+      </svg>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="info-block">
+      <h4>Normal Function 正常功能</h4>
+      <p>CDK inhibitor (CDK抑制因子, CIP/KIP family): p53 transcriptional target. Binds and inhibits Cyclin E/A-CDK2 and Cyclin D-CDK4/6 complexes → enforces G1 cell cycle arrest after DNA damage, allowing repair. Also promotes senescence and differentiation.</p>
+    </div>
+    <div class="info-block">
+      <h4>Mutation Effect 突变影响</h4>
+      <p>Rarely somatically mutated; more often downregulated via deletion, epigenetic silencing, or p53 dysfunction (since p21 is a p53 target). Loss → CDK complexes remain active → defective G1/S checkpoint → cells with damaged DNA proceed to replicate → genomic instability and tumor progression.</p>
+    </div>
+    <div class="info-block cancer">
+      <h4>Common Cancer 常见癌症</h4>
+      <p>Various cancers with p53 pathway dysfunction; reduced in endometrial, prostate, lung</p>
+      <div class="freq-bar"><div class="freq-fill" style="width:30%"></div></div>
+    </div>
+    <div class="info-block treatment">
+      <h4>Targeted Therapy 靶向治疗</h4>
+      <p>No direct p21-targeted drug. Indirect strategies: p53 gene therapy (restores p21 transcription), MDM2 inhibitors (raise p53 → p21), CDK4/6 inhibitors (compensate for lost p21 inhibition). Histone deacetylase inhibitors can re-express p21.</p>
+    </div>
+  </div>
+</article>
+
+<!-- ============ 12. APC ============ -->
+<article class="gene-card" data-type="suppressor" data-search="apc truncating mutation colorectal fap familial adenomatous polyposis beta catenin wnt destruction complex axin gsk3 chromosome segregation">
+  <div class="card-header">
+    <div class="gene-name">APC</div>
+    <span class="type-badge suppressor">Tumor Suppressor</span>
+  </div>
+  <div class="mutation-chip">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2471a3" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/><line x1="6" y1="3" x2="6" y2="21" stroke="#2471a3" stroke-width="2"/></svg>
+    Truncating Mutation (nonsense/frameshift) · LOH
+  </div>
+  <div class="diagram-wrap">
+    <div class="diagram-label">Mechanism 机制图</div>
+    <div class="diagram-box">
+      <svg viewBox="0 0 300 130">
+        <!-- Normal -->
+        <text x="75" y="14" text-anchor="middle" class="svg-label" fill="#27ae60">Normal</text>
+        <rect x="10" y="22" width="130" height="26" rx="5" fill="#eaf2f8" stroke="#2471a3" stroke-width="1.5"/>
+        <text x="75" y="39" text-anchor="middle" class="svg-small">APC + Axin + GSK3 = Destruction Complex</text>
+        <path d="M75 48 L75 58" class="svg-arrow-blue"/>
+        <rect x="30" y="60" width="90" height="18" rx="4" fill="#fef9e7" stroke="#b7950b" stroke-width="1"/>
+        <text x="75" y="73" text-anchor="middle" class="svg-small">β-catenin phosphorylated</text>
+        <path d="M75 78 L75 88" class="svg-arrow-blue"/>
+        <text x="75" y="100" text-anchor="middle" class="svg-small">→ β-catenin degraded</text>
+        <text x="75" y="116" text-anchor="middle" class="svg-small">→ Wnt pathway OFF (controlled)</text>
+        <!-- Divider -->
+        <line x1="155" y1="10" x2="155" y2="125" stroke="#ddd" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- Mutant -->
+        <text x="230" y="14" text-anchor="middle" class="svg-label" fill="#c0392b">Mutated (Truncated)</text>
+        <rect x="170" y="22" width="120" height="26" rx="5" fill="#fdecea" stroke="#c0392b" stroke-width="2" stroke-dasharray="5,3"/>
+        <text x="230" y="39" text-anchor="middle" class="svg-small" fill="#c0392b">APC truncated → complex BROKEN</text>
+        <path d="M230 48 L230 58" class="svg-arrow-red"/>
+        <text x="230" y="70" text-anchor="middle" class="svg-small" fill="#c0392b">β-catenin NOT phosphorylated</text>
+        <path d="M230 76 L230 86" class="svg-arrow-red"/>
+        <text x="230" y="98" text-anchor="middle" class="svg-small" fill="#c0392b">→ β-catenin accumulates</text>
+        <text x="230" y="112" text-anchor="middle" class="svg-small" fill="#c0392b">→ Wnt genes always ON!</text>
+        <text x="230" y="124" text-anchor="middle" class="svg-small" fill="#c0392b">→ Polyps → cancer!</text>
+      </svg>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="info-block">
+      <h4>Normal Function 正常功能</h4>
+      <p>Scaffold tumor suppressor (支架抑癌蛋白): core component of β-catenin destruction complex (with Axin, GSK3β, CK1α). Binds and phosphorylates β-catenin → ubiquitination → degradation. Also regulates cell migration, adhesion, and chromosome segregation.</p>
+    </div>
+    <div class="info-block">
+      <h4>Mutation Effect 突变影响</h4>
+      <p>Truncating mutations (nonsense/frameshift) remove β-catenin binding/SAMP repeats → destruction complex cannot assemble → β-catenin escapes degradation → nuclear accumulation → constitutive Wnt target gene transcription (MYC, CCND1) → uncontrolled proliferation of intestinal epithelium → adenoma formation.</p>
+    </div>
+    <div class="info-block cancer">
+      <h4>Common Cancer 常见癌症</h4>
+      <p>Colorectal cancer ~80% (sporadic); FAP (germline, 100% lifetime risk)</p>
+      <div class="freq-bar"><div class="freq-fill" style="width:80%"></div></div>
+    </div>
+    <div class="info-block treatment">
+      <h4>Targeted Therapy 靶向治疗</h4>
+      <p>No direct APC-targeted therapy. Wnt pathway inhibitors in clinical trials (Porcupine inhibitors, tankyrase inhibitors). FAP management: endoscopic surveillance, prophylactic colectomy, NSAIDs (sulindac, celecoxib) reduce polyp burden. Standard CRC chemo.</p>
+    </div>
+  </div>
+</article>
+
+<!-- ============ 13. BRCA1 ============ -->
+<article class="gene-card" data-type="suppressor" data-search="brca1 breast ovarian homologous recombination dna repair parp inhibitor olaparib talazoparib niraparib rucaparib platinum rad51 genomic instability">
+  <div class="card-header">
+    <div class="gene-name">BRCA1</div>
+    <span class="type-badge suppressor">Tumor Suppressor</span>
+  </div>
+  <div class="mutation-chip">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2471a3" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/><line x1="6" y1="3" x2="6" y2="21" stroke="#2471a3" stroke-width="2"/></svg>
+    Germline/Somatic Loss-of-Function · Deletion
+  </div>
+  <div class="diagram-wrap">
+    <div class="diagram-label">Mechanism 机制图</div>
+    <div class="diagram-box">
+      <svg viewBox="0 0 300 130">
+        <!-- Normal -->
+        <text x="75" y="14" text-anchor="middle" class="svg-label" fill="#27ae60">Normal (DSB)</text>
+        <rect x="20" y="22" width="110" height="22" rx="5" fill="#eaf2f8" stroke="#2471a3" stroke-width="1.5"/>
+        <text x="75" y="37" text-anchor="middle" class="svg-small">DNA double-strand break</text>
+        <path d="M75 44 L75 54" class="svg-arrow-blue"/>
+        <rect x="25" y="56" width="100" height="20" rx="4" fill="#eaf2f8" stroke="#2471a3" stroke-width="1.5"/>
+        <text x="75" y="70" text-anchor="middle" class="svg-small">BRCA1 + RAD51 → HR repair</text>
+        <path d="M75 76 L75 86" class="svg-arrow-blue"/>
+        <text x="75" y="98" text-anchor="middle" class="svg-small">→ Accurate repair using sister chromatid</text>
+        <text x="75" y="114" text-anchor="middle" class="svg-small">→ Genome stable</text>
+        <!-- Divider -->
+        <line x1="155" y1="10" x2="155" y2="125" stroke="#ddd" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- Mutant -->
+        <text x="230" y="14" text-anchor="middle" class="svg-label" fill="#c0392b">Mutated (Loss)</text>
+        <rect x="175" y="22" width="110" height="22" rx="5" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
+        <text x="230" y="37" text-anchor="middle" class="svg-small" fill="#c0392b">DNA break (no BRCA1!)</text>
+        <path d="M230 44 L230 54" class="svg-arrow-red"/>
+        <text x="230" y="66" text-anchor="middle" class="svg-small" fill="#c0392b">No homologous recombination</text>
+        <path d="M230 72 L230 82" class="svg-arrow-red"/>
+        <rect x="185" y="84" width="90" height="18" rx="4" fill="#fdecea" stroke="#c0392b" stroke-width="1.5"/>
+        <text x="230" y="97" text-anchor="middle" class="svg-small" fill="#c0392b">Error-prone NHEJ only</text>
+        <path d="M230 102 L230 112" class="svg-arrow-red"/>
+        <text x="230" y="124" text-anchor="middle" class="svg-small" fill="#c0392b">→ Mutations accumulate! "BRCAness"</text>
+      </svg>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="info-block">
+      <h4>Normal Function 正常功能</h4>
+      <p>DNA repair protein (DNA修复蛋白): tumor suppressor critical for homologous recombination (HR) repair of DNA double-strand breaks. Recruits RAD51 to break sites, interacts with BRCA2/PALB2, enforces cell cycle checkpoints (G2/M), and maintains genomic stability.</p>
+    </div>
+    <div class="info-block">
+      <h4>Mutation Effect 突变影响</h4>
+      <p>Loss-of-function mutations (truncating, missense in BRCT/RING domains) → defective HR repair → cells rely on error-prone non-homologous end joining (NHEJ) → accumulation of chromosomal rearrangements, deletions, and mutations → genomic instability ("BRCAness") → malignant transformation.</p>
+    </div>
+    <div class="info-block cancer">
+      <h4>Common Cancer 常见癌症</h4>
+      <p>Hereditary breast & ovarian cancer (HBOC): breast ~55–65%, ovarian ~39% (germline carriers)</p>
+      <div class="freq-bar"><div class="freq-fill" style="width:60%"></div></div>
+    </div>
+    <div class="info-block treatment">
+      <h4>Targeted Therapy 靶向治疗</h4>
+      <p>PARP inhibitors (合成致死 synthetic lethality): Olaparib (Lynparza), Talazoparib (Talzenna), Niraparib (Zejula), Rucaparib (Rubraca). Platinum-based chemotherapy (cisplatin/carboplatin) also effective due to HR deficiency. Preventive surgery for high-risk carriers.</p>
+    </div>
+  </div>
+</article>
+
+<!-- ============ 14. TP53 ============ -->
+<article class="gene-card" data-type="suppressor" data-search="tp53 p53 missense mutation dominant negative gain of function ovarian lung colorectal head neck li fraumeni apr-246 eprenetapopt mdm2 inhibitor guardian genome">
+  <div class="card-header">
+    <div class="gene-name">TP53 <span class="alt">(p53)</span></div>
+    <span class="type-badge suppressor">Tumor Suppressor</span>
+  </div>
+  <div class="mutation-chip">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2471a3" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+    Missense Mutation (dominant-negative / GOF) · Most mutated gene in cancer
+  </div>
+  <div class="diagram-wrap">
+    <div class="diagram-label">Mechanism 机制图</div>
+    <div class="diagram-box">
+      <svg viewBox="0 0 300 130">
+        <!-- Normal -->
+        <text x="75" y="14" text-anchor="middle" class="svg-label" fill="#27ae60">Normal (Stress)</text>
+        <circle cx="75" cy="38" r="16" fill="#eaf2f8" stroke="#2471a3" stroke-width="1.5"/>
+        <text x="75" y="42" text-anchor="middle" class="svg-label" fill="#2471a3">p53</text>
+        <path d="M75 54 L75 64" class="svg-arrow-blue"/>
+        <text x="75" y="76" text-anchor="middle" class="svg-small">p21 → cell cycle arrest</text>
+        <text x="75" y="88" text-anchor="middle" class="svg-small">BAX → apoptosis</text>
+        <text x="75" y="100" text-anchor="middle" class="svg-small">DNA repair genes</text>
+        <text x="75" y="116" text-anchor="middle" class="svg-small">→ "Guardian of the genome"</text>
+        <!-- Divider -->
+        <line x1="155" y1="10" x2="155" y2="125" stroke="#ddd" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- Mutant -->
+        <text x="230" y="14" text-anchor="middle" class="svg-label" fill="#c0392b">Mutated (Missense)</text>
+        <circle cx="210" cy="38" r="14" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
+        <text x="210" y="42" text-anchor="middle" class="svg-small" fill="#c0392b">mut p53</text>
+        <circle cx="250" cy="38" r="14" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
+        <text x="250" y="42" text-anchor="middle" class="svg-small" fill="#c0392b">mut p53</text>
+        <path d="M230 52 L230 62" class="svg-arrow-red"/>
+        <text x="230" y="74" text-anchor="middle" class="svg-small" fill="#c0392b">Tetramer poisons WT p53</text>
+        <text x="230" y="86" text-anchor="middle" class="svg-small" fill="#c0392b">(dominant-negative)</text>
+        <path d="M230 92 L230 102" class="svg-arrow-red"/>
+        <text x="230" y="114" text-anchor="middle" class="svg-small" fill="#c0392b">No arrest/apoptosis + GOF</text>
+        <text x="230" y="126" text-anchor="middle" class="svg-small" fill="#c0392b">→ Damaged cells survive & divide!</text>
+      </svg>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="info-block">
+      <h4>Normal Function 正常功能</h4>
+      <p>"Guardian of the genome" (基因组守护者): transcription factor and tumor suppressor. Activated by DNA damage, oncogene stress, hypoxia → transcribes p21 (cell cycle arrest), BAX/PUMA (apoptosis), GADD45 (DNA repair), and senescence genes. Eliminates or repairs damaged cells.</p>
+    </div>
+    <div class="info-block">
+      <h4>Mutation Effect 突变影响</h4>
+      <p>Mostly missense mutations in DNA-binding domain (hotspots R175, G245, R248, R249, R273, R282). Three effects: (1) Loss of tumor suppressor function; (2) Dominant-negative — mutant p53 monomers poison wildtype tetramers; (3) Gain-of-function (GOF) — mutant protein acquires new oncogenic activities promoting metastasis, drug resistance, and metabolism changes.</p>
+    </div>
+    <div class="info-block cancer">
+      <h4>Common Cancer 常见癌症</h4>
+      <p>~50% of all human cancers. High-grade serous ovarian ~96%; also lung, HNSCC, colorectal. Li-Fraumeni syndrome (germline)</p>
+      <div class="freq-bar"><div class="freq-fill" style="width:50%"></div></div>
+    </div>
+    <div class="info-block treatment">
+      <h4>Targeted Therapy 靶向治疗</h4>
+      <p>No universally approved direct p53 drug. APR-246/Eprenetapopt (mutant p53 reactivator, approved in some countries). MDM2 inhibitors (for WT p53 tumors: idasanutlin, siremadlin). p53 vaccine and gene therapy (Gendicine in China) in use/trials. Most cancers rely on chemo/immunotherapy.</p>
+    </div>
+  </div>
+</article>
+
+<!-- ============ 15. PTEN ============ -->
+<article class="gene-card" data-type="suppressor" data-search="pten phosphatase deletion mutation glioblastoma endometrial prostate breast thyroid cowden syndrome pi3k akt mtor pip3 everolimus temsirolimus alpelisib">
+  <div class="card-header">
+    <div class="gene-name">PTEN</div>
+    <span class="type-badge suppressor">Tumor Suppressor</span>
+  </div>
+  <div class="mutation-chip">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2471a3" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/><line x1="6" y1="3" x2="6" y2="21" stroke="#2471a3" stroke-width="2"/></svg>
+    Loss-of-Function Mutation · Deletion · Epigenetic silencing
+  </div>
+  <div class="diagram-wrap">
+    <div class="diagram-label">Mechanism 机制图</div>
+    <div class="diagram-box">
+      <svg viewBox="0 0 300 130">
+        <!-- Normal -->
+        <text x="75" y="14" text-anchor="middle" class="svg-label" fill="#27ae60">Normal</text>
+        <rect x="25" y="22" width="100" height="20" rx="4" fill="#eafaf1" stroke="#27ae60" stroke-width="1.5"/>
+        <text x="75" y="36" text-anchor="middle" class="svg-small">PI3K makes PIP3</text>
+        <path d="M75 42 L75 52" class="svg-arrow"/>
+        <circle cx="75" cy="64" r="14" fill="#eaf2f8" stroke="#2471a3" stroke-width="1.5"/>
+        <text x="75" y="68" text-anchor="middle" class="svg-small" fill="#2471a3">PTEN</text>
+        <text x="75" y="84" text-anchor="middle" class="svg-small">PIP3 → PIP2 (brake!)</text>
+        <path d="M75 90 L75 100" class="svg-arrow-blue"/>
+        <text x="75" y="112" text-anchor="middle" class="svg-small">→ AKT activity balanced</text>
+        <text x="75" y="124" text-anchor="middle" class="svg-small">→ Controlled growth & survival</text>
+        <!-- Divider -->
+        <line x1="155" y1="10" x2="155" y2="125" stroke="#ddd" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- Mutant -->
+        <text x="230" y="14" text-anchor="middle" class="svg-label" fill="#c0392b">Mutated (Lost)</text>
+        <rect x="180" y="22" width="100" height="20" rx="4" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
+        <text x="230" y="36" text-anchor="middle" class="svg-small" fill="#c0392b">PI3K makes PIP3</text>
+        <path d="M230 42 L230 52" class="svg-arrow-red"/>
+        <circle cx="230" cy="64" r="14" fill="#f5f5f5" stroke="#ccc" stroke-width="1.5" stroke-dasharray="3,2"/>
+        <text x="230" y="68" text-anchor="middle" class="svg-small" fill="#999">no PTEN</text>
+        <text x="230" y="86" text-anchor="middle" class="svg-small" fill="#c0392b">PIP3 accumulates!</text>
+        <path d="M230 92 L230 102" class="svg-arrow-red"/>
+        <text x="230" y="114" text-anchor="middle" class="svg-small" fill="#c0392b">→ AKT hyperactive</text>
+        <text x="230" y="126" text-anchor="middle" class="svg-small" fill="#c0392b">→ Survival & growth unchecked!</text>
+      </svg>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="info-block">
+      <h4>Normal Function 正常功能</h4>
+      <p>Lipid phosphatase (脂质磷酸酶): major antagonist of PI3K/AKT pathway. Dephosphorylates PIP3 → PIP2 at the plasma membrane, removing the docking site for AKT and PDK1. Keeps AKT activity in check, restraining proliferation and survival. Also has nuclear and protein phosphatase functions.</p>
+    </div>
+    <div class="info-block">
+      <h4>Mutation Effect 突变影响</h4>
+      <p>Loss-of-function (missense in phosphatase domain, truncating, deletion, promoter methylation) → loss of PIP3 phosphatase activity → PIP3 accumulates at membrane → constitutive AKT recruitment and activation → enhanced mTOR signaling, glucose metabolism, survival, and proliferation. Even partial loss (haploinsufficiency) promotes tumorigenesis.</p>
+    </div>
+    <div class="info-block cancer">
+      <h4>Common Cancer 常见癌症</h4>
+      <p>Glioblastoma (primary) ~40%; Endometrial ~30–50%; also prostate, breast, thyroid. Cowden syndrome (germline)</p>
+      <div class="freq-bar"><div class="freq-fill" style="width:40%"></div></div>
+    </div>
+    <div class="info-block treatment">
+      <h4>Targeted Therapy 靶向治疗</h4>
+      <p>Indirect targeting of downstream PI3K/AKT/mTOR axis: Everolimus/Temsirolimus (mTOR inhibitors, approved for subependymal giant cell astrocytoma in TSC, renal cell carcinoma, breast cancer). Alpelisib (PI3Kα inhibitor). AKT inhibitors (capivasertib). No direct PTEN restoration therapy approved.</p>
+    </div>
+  </div>
+</article>
+
+<!-- ============ 16. VHL ============ -->
+<article class="gene-card" data-type="suppressor" data-search="vhl von hippel lindau renal cell carcinoma clear cell hif hypoxia angiogenesis belzutifan sunitinib pazopanib axitinib bevacizumab everolimus ubiquitin ligase">
+  <div class="card-header">
+    <div class="gene-name">VHL <span class="alt">(von Hippel-Lindau)</span></div>
+    <span class="type-badge suppressor">Tumor Suppressor</span>
+  </div>
+  <div class="mutation-chip">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2471a3" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/><line x1="6" y1="3" x2="6" y2="21" stroke="#2471a3" stroke-width="2"/></svg>
+    Germline/Somatic Loss-of-Function · Promoter methylation
+  </div>
+  <div class="diagram-wrap">
+    <div class="diagram-label">Mechanism 机制图</div>
+    <div class="diagram-box">
+      <svg viewBox="0 0 300 130">
+        <!-- Normal (normoxia) -->
+        <text x="75" y="14" text-anchor="middle" class="svg-label" fill="#27ae60">Normal (Normoxia)</text>
+        <rect x="20" y="22" width="110" height="20" rx="4" fill="#eaf2f8" stroke="#2471a3" stroke-width="1.5"/>
+        <text x="75" y="36" text-anchor="middle" class="svg-small">HIF-α (hydroxylated by O2)</text>
+        <path d="M75 42 L75 52" class="svg-arrow-blue"/>
+        <circle cx="75" cy="64" r="14" fill="#eaf2f8" stroke="#2471a3" stroke-width="1.5"/>
+        <text x="75" y="68" text-anchor="middle" class="svg-small" fill="#2471a3">VHL</text>
+        <text x="75" y="86" text-anchor="middle" class="svg-small">binds → ubiquitinates HIF-α</text>
+        <path d="M75 92 L75 102" class="svg-arrow-blue"/>
+        <text x="75" y="114" text-anchor="middle" class="svg-small">→ HIF-α degraded</text>
+        <text x="75" y="126" text-anchor="middle" class="svg-small">→ No hypoxic genes in oxygen</text>
+        <!-- Divider -->
+        <line x1="155" y1="10" x2="155" y2="125" stroke="#ddd" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- Mutant -->
+        <text x="230" y="14" text-anchor="middle" class="svg-label" fill="#c0392b">Mutated (VHL loss)</text>
+        <rect x="175" y="22" width="110" height="20" rx="4" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
+        <text x="230" y="36" text-anchor="middle" class="svg-small" fill="#c0392b">HIF-α (even with O2!)</text>
+        <path d="M230 42 L230 52" class="svg-arrow-red"/>
+        <circle cx="230" cy="64" r="14" fill="#f5f5f5" stroke="#ccc" stroke-width="1.5" stroke-dasharray="3,2"/>
+        <text x="230" y="68" text-anchor="middle" class="svg-small" fill="#999">no VHL</text>
+        <text x="230" y="86" text-anchor="middle" class="svg-small" fill="#c0392b">HIF-α NOT degraded!</text>
+        <path d="M230 92 L230 102" class="svg-arrow-red"/>
+        <text x="230" y="114" text-anchor="middle" class="svg-small" fill="#c0392b">→ VEGF, GLUT1, EPO ON</text>
+        <text x="230" y="126" text-anchor="middle" class="svg-small" fill="#c0392b">→ Tumor blood vessels grow!</text>
+      </svg>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="info-block">
+      <h4>Normal Function 正常功能</h4>
+      <p>Substrate recognition subunit of E3 ubiquitin ligase (E3泛素连接酶底物识别亚基): VCB-CUL2 complex. Under normoxia, HIF-α subunits are prolyl-hydroxylated (oxygen-dependent). VHL recognizes hydroxylated HIF-α → ubiquitinates → proteasomal degradation. Ensures hypoxic response genes are OFF when oxygen is available.</p>
+    </div>
+    <div class="info-block">
+      <h4>Mutation Effect 突变影响</h4>
+      <p>Loss-of-function (missense in HIF-binding domain, truncating, deletion, promoter hypermethylation) → VHL cannot bind hydroxylated HIF-α → HIF-1α/HIF-2α escape degradation even under normoxia → constitutive "pseudo-hypoxic" transcriptional program → VEGF-driven angiogenesis, glycolytic switch (Warburg), erythropoiesis → highly vascular tumors.</p>
+    </div>
+    <div class="info-block cancer">
+      <h4>Common Cancer 常见癌症</h4>
+      <p>Clear cell renal cell carcinoma ~90% have VHL inactivation (~70–80% somatic mutation)</p>
+      <div class="freq-bar"><div class="freq-fill" style="width:85%"></div></div>
+    </div>
+    <div class="info-block treatment">
+      <h4>Targeted Therapy 靶向治疗</h4>
+      <p>Belzutifan (Welireg) — HIF-2α inhibitor, first-in-class, approved for VHL disease-associated tumors and advanced ccRCC. Anti-angiogenics: Sunitinib, Pazopanib, Axitinib, Bevacizumab (anti-VEGF). mTOR inhibitors: Everolimus, Temsirolimus. Immune checkpoint inhibitors increasingly used.</p>
+    </div>
+  </div>
+</article>
+
+<!-- ============ 17. RUNX1 ============ -->
+<article class="gene-card" data-type="suppressor" data-search="runx1 translocation t(8;21) aml acute myeloid leukemia myelodysplastic mds all core binding factor hematopoiesis differentiation gemtuzumab cytarabine anthracycline">
+  <div class="card-header">
+    <div class="gene-name">RUNX1 <span class="alt">(AML1 / CBFα2)</span></div>
+    <span class="type-badge suppressor">Tumor Suppressor / Fusion Oncogene</span>
+  </div>
+  <div class="mutation-chip">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2471a3" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/><line x1="6" y1="3" x2="6" y2="21" stroke="#2471a3" stroke-width="2"/></svg>
+    Translocation t(8;21) · Loss-of-Function Mutation
+  </div>
+  <div class="diagram-wrap">
+    <div class="diagram-label">Mechanism 机制图</div>
+    <div class="diagram-box">
+      <svg viewBox="0 0 300 130">
+        <!-- Normal -->
+        <text x="75" y="14" text-anchor="middle" class="svg-label" fill="#27ae60">Normal (Hematopoiesis)</text>
+        <circle cx="50" cy="40" r="14" fill="#eaf2f8" stroke="#2471a3" stroke-width="1.5"/>
+        <text x="50" y="44" text-anchor="middle" class="svg-small" fill="#2471a3">RUNX1</text>
+        <circle cx="100" cy="40" r="12" fill="#eaf2f8" stroke="#2471a3" stroke-width="1.5"/>
+        <text x="100" y="44" text-anchor="middle" class="svg-small">CBFβ</text>
+        <path d="M64 40 L88 40" stroke="#2471a3" stroke-width="1.5"/>
+        <path d="M75 54 L75 64" class="svg-arrow-blue"/>
+        <text x="75" y="76" text-anchor="middle" class="svg-small">Myeloid/lymphoid</text>
+        <text x="75" y="88" text-anchor="middle" class="svg-small">differentiation genes</text>
+        <path d="M75 94 L75 104" class="svg-arrow-blue"/>
+        <text x="75" y="116" text-anchor="middle" class="svg-small">→ Mature blood cells</text>
+        <!-- Divider -->
+        <line x1="155" y1="10" x2="155" y2="125" stroke="#ddd" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- Mutant -->
+        <text x="230" y="14" text-anchor="middle" class="svg-label" fill="#c0392b">t(8;21) Fusion</text>
+        <rect x="175" y="24" width="110" height="24" rx="4" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
+        <text x="230" y="40" text-anchor="middle" class="svg-small" fill="#c0392b">RUNX1-ETO (fusion!)</text>
+        <path d="M230 48 L230 58" class="svg-arrow-red"/>
+        <text x="230" y="70" text-anchor="middle" class="svg-small" fill="#c0392b">Dominant-negative repressor</text>
+        <text x="230" y="82" text-anchor="middle" class="svg-small" fill="#c0392b">Blocks differentiation genes</text>
+        <path d="M230 88 L230 98" class="svg-arrow-red"/>
+        <text x="230" y="110" text-anchor="middle" class="svg-small" fill="#c0392b">→ Myeloid blasts stuck</text>
+        <text x="230" y="124" text-anchor="middle" class="svg-small" fill="#c0392b">→ Acute Myeloid Leukemia!</text>
+      </svg>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="info-block">
+      <h4>Normal Function 正常功能</h4>
+      <p>Master transcription factor (核心转录因子): alpha subunit of Core Binding Factor (CBF), heterodimerizes with CBFβ. Essential for definitive hematopoiesis — regulates differentiation of myeloid and lymphoid lineages by activating genes for myeloid maturation, T-cell development, and megakaryocyte differentiation.</p>
+    </div>
+    <div class="info-block">
+      <h4>Mutation Effect 突变影响</h4>
+      <p>Two mechanisms: (1) Translocation t(8;21)(q22;q22) → RUNX1-RUNX1T1 (ETO) fusion protein — acts as dominant-negative transcriptional repressor, blocking myeloid differentiation; (2) Loss-of-function point mutations/deletions → impaired hematopoietic differentiation. Both result in accumulation of immature myeloid blasts → leukemogenesis. RUNX1 mutations also associated with therapy-related AML and MDS progression.</p>
+    </div>
+    <div class="info-block cancer">
+      <h4>Common Cancer 常见癌症</h4>
+      <p>Acute Myeloid Leukemia (AML): t(8;21) ~10–15% of AML; RUNX1 mutations ~10–15%</p>
+      <div class="freq-bar"><div class="freq-fill" style="width:13%"></div></div>
+    </div>
+    <div class="info-block treatment">
+      <h4>Targeted Therapy 靶向治疗</h4>
+      <p>No direct RUNX1-targeted therapy approved. t(8;21) AML (favorable-risk) treated with standard chemotherapy: Cytarabine + Anthracycline ("7+3"), high-dose cytarabine consolidation. Gemtuzumab ozogamicin (anti-CD33 ADC) added in some regimens. Allogeneic HSCT for high-risk. RUNX1 inhibitors and degraders in early clinical trials.</p>
+    </div>
+  </div>
+</article>
+
+</main>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+  <p>Cancer Gene Mutation Atlas · 17 genes reference · For educational purposes · Mutation frequencies are approximate and vary by study/population</p>
+</footer>
+
+<script>
+// ===== Search & Filter =====
+const searchInput = document.getElementById('searchInput');
+const filterBtns = document.querySelectorAll('.filter-btn');
+const cards = document.querySelectorAll('.gene-card');
+let activeFilter = 'all';
+
+function applyFilters() {
+  const query = searchInput.value.toLowerCase().trim();
+  cards.forEach(card => {
+    const type = card.dataset.type;
+    const search = (card.dataset.search || '').toLowerCase();
+    const name = card.querySelector('.gene-name').textContent.toLowerCase();
+    const matchesType = (activeFilter === 'all' || type === activeFilter);
+    const matchesSearch = (!query || search.includes(query) || name.includes(query));
+    card.style.display = (matchesType && matchesSearch) ? '' : 'none';
+  });
+}
+
+searchInput.addEventListener('input', applyFilters);
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    filterBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.dataset.filter;
+    applyFilters();
+  });
+});
+
+// ===== Animate frequency bars on scroll =====
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const fills = entry.target.querySelectorAll('.freq-fill');
+      fills.forEach(f => {
+        const w = f.style.width;
+        f.style.width = '0%';
+        requestAnimationFrame(() => { f.style.width = w; });
+      });
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.2 });
+cards.forEach(c => observer.observe(c));
+</script>
+
+</body>
+</html>
