@@ -451,15 +451,16 @@
     <h1>Cancer Gene Mutation Atlas</h1>
     <p class="subtitle">17 genes · mutation status · mechanism · cancer type · targeted therapy</p>
     <div class="legend">
-      <div class="legend-item"><span class="legend-dot oncogene"></span> Oncogene (gain-of-function)</div>
-      <div class="legend-item"><span class="legend-dot suppressor"></span> Tumor Suppressor (loss-of-function)
+      <div class="legend-item"><span class="legend-dot oncogene"></span> Oncogene 癌基因 (gain-of-function)</div>
+      <div class="legend-item"><span class="legend-dot suppressor"></span> Tumor Suppressor 抑癌基因 (loss-of-function)
       </div>
     </div>
   </header>
 
   <!-- ===== Controls ===== -->
   <div class="controls">
-    <input type="text" class="search-box" id="searchInput" placeholder="Search gene name, cancer, or drug...">
+    <input type="text" class="search-box" id="searchInput"
+      placeholder="Search gene name, cancer, or drug... 搜索基因/癌症/药物">
     <button class="filter-btn active" data-filter="all">All</button>
     <button class="filter-btn" data-filter="oncogene">Oncogenes</button>
     <button class="filter-btn" data-filter="suppressor">Tumor Suppressors</button>
@@ -503,7 +504,7 @@
         Point Mutation (missense) · G12, G13, Q61
       </div>
       <div class="diagram-wrap">
-        <div class="diagram-label">Mechanism</div>
+        <div class="diagram-label">Mechanism 机制图</div>
         <div class="diagram-box">
           <svg viewBox="0 0 300 130">
             <!-- Normal side -->
@@ -531,25 +532,24 @@
       </div>
       <div class="card-body">
         <div class="info-block">
-          <h4>Normal Function</h4>
-          <p>Small GTPase (G protein): molecular switch transducing signals from RTK → MAPK & PI3K pathways. Cycles
-            between
+          <h4>Normal Function 正常功能</h4>
+          <p>Small GTPase (G蛋白): molecular switch transducing signals from RTK → MAPK & PI3K pathways. Cycles between
             GDP (off) and GTP (on).</p>
         </div>
         <div class="info-block">
-          <h4>Mutation Effect</h4>
+          <h4>Mutation Effect 突变影响</h4>
           <p>Missense mutations block GTP hydrolysis → Ras trapped in GTP-bound active state → constitutive downstream
             signaling regardless of growth signals.</p>
         </div>
         <div class="info-block cancer">
-          <h4>Common Cancer</h4>
+          <h4>Common Cancer 常见癌症</h4>
           <p>Pancreatic ductal adenocarcinoma ~90% (KRAS)</p>
           <div class="freq-bar">
             <div class="freq-fill" style="width:90%"></div>
           </div>
         </div>
         <div class="info-block treatment">
-          <h4>Targeted Therapy</h4>
+          <h4>Targeted Therapy 靶向治疗</h4>
           <p>Sotorasib / Adagrasib (KRAS G12C inhibitors). Historically "undruggable"; G12C covalent inhibitors
             breakthrough.</p>
         </div>
@@ -571,7 +571,7 @@
         Amplification / Translocation t(8;14)
       </div>
       <div class="diagram-wrap">
-        <div class="diagram-label">Mechanism</div>
+        <div class="diagram-label">Mechanism 机制图</div>
         <div class="diagram-box">
           <svg viewBox="0 0 300 130">
             <!-- Normal -->
@@ -599,24 +599,24 @@
       </div>
       <div class="card-body">
         <div class="info-block">
-          <h4>Normal Function</h4>
-          <p>Transcription factor: master regulator of cell cycle progression, metabolism, ribosome biogenesis,
+          <h4>Normal Function 正常功能</h4>
+          <p>Transcription factor (转录因子): master regulator of cell cycle progression, metabolism, ribosome biogenesis,
             and protein synthesis. Rapidly turned over.</p>
         </div>
         <div class="info-block">
-          <h4>Mutation Effect</h4>
+          <h4>Mutation Effect 突变影响</h4>
           <p>Gene amplification or translocation (IgH enhancer in Burkitt) → massive overexpression → global
             transcriptional amplification driving proliferation and biomass accumulation.</p>
         </div>
         <div class="info-block cancer">
-          <h4>Common Cancer</h4>
+          <h4>Common Cancer 常见癌症</h4>
           <p>Burkitt lymphoma ~100% (t(8;14) translocation)</p>
           <div class="freq-bar">
             <div class="freq-fill" style="width:100%"></div>
           </div>
         </div>
         <div class="info-block treatment">
-          <h4>Targeted Therapy</h4>
+          <h4>Targeted Therapy 靶向治疗</h4>
           <p>No direct FDA-approved Myc inhibitor. Indirect: BET inhibitors (JQ1, OTX015) block Myc transcription;
             OmoMYC dominant-negative peptide (clinical trials).</p>
         </div>
@@ -637,7 +637,7 @@
         Point Mutation · E542K / E545K / H1047R
       </div>
       <div class="diagram-wrap">
-        <div class="diagram-label">Mechanism</div>
+        <div class="diagram-label">Mechanism 机制图</div>
         <div class="diagram-box">
           <svg viewBox="0 0 300 130">
             <!-- Normal -->
@@ -665,24 +665,24 @@
       </div>
       <div class="card-body">
         <div class="info-block">
-          <h4>Normal Function</h4>
-          <p>Catalytic subunit p110α of PI3K: phosphorylates PIP2 → PIP3 at membrane, recruiting and
+          <h4>Normal Function 正常功能</h4>
+          <p>Catalytic subunit p110α of PI3K (磷脂酰肌醇3-激酶): phosphorylates PIP2 → PIP3 at membrane, recruiting and
             activating AKT. Requires upstream RTK/Ras signal.</p>
         </div>
         <div class="info-block">
-          <h4>Mutation Effect</h4>
+          <h4>Mutation Effect 突变影响</h4>
           <p>Hotspot mutations in helical (E545K) or kinase (H1047R) domain → constitutive lipid kinase activity
             independent of upstream signals → PIP3 overproduction → AKT pathway hyperactivation.</p>
         </div>
         <div class="info-block cancer">
-          <h4>Common Cancer</h4>
+          <h4>Common Cancer 常见癌症</h4>
           <p>Breast cancer (HR+/HER2−) ~40%</p>
           <div class="freq-bar">
             <div class="freq-fill" style="width:40%"></div>
           </div>
         </div>
         <div class="info-block treatment">
-          <h4>Targeted Therapy</h4>
+          <h4>Targeted Therapy 靶向治疗</h4>
           <p>Alpelisib (Piqray) — PI3Kα-specific inhibitor, approved for HR+/HER2− metastatic breast cancer with PIK3CA
             mutation, combined with fulvestrant.</p>
         </div>
@@ -704,7 +704,7 @@
         Gene Amplification (12q15)
       </div>
       <div class="diagram-wrap">
-        <div class="diagram-label">Mechanism</div>
+        <div class="diagram-label">Mechanism 机制图</div>
         <div class="diagram-box">
           <svg viewBox="0 0 300 130">
             <!-- Normal -->
@@ -739,24 +739,24 @@
       </div>
       <div class="card-body">
         <div class="info-block">
-          <h4>Normal Function</h4>
-          <p>E3 ubiquitin ligase: binds p53, ubiquitinates it → proteasomal degradation. Key negative
+          <h4>Normal Function 正常功能</h4>
+          <p>E3 ubiquitin ligase (E3泛素连接酶): binds p53, ubiquitinates it → proteasomal degradation. Key negative
             regulator keeping p53 levels low under normal conditions. Negative feedback loop.</p>
         </div>
         <div class="info-block">
-          <h4>Mutation Effect</h4>
+          <h4>Mutation Effect 突变影响</h4>
           <p>Gene amplification → MDM2 overproduction → excessive p53 ubiquitination and degradation → p53 tumor
             suppressor pathway functionally inactivated even when TP53 itself is wild-type.</p>
         </div>
         <div class="info-block cancer">
-          <h4>Common Cancer</h4>
+          <h4>Common Cancer 常见癌症</h4>
           <p>Well-differentiated / dedifferentiated liposarcoma ~90%</p>
           <div class="freq-bar">
             <div class="freq-fill" style="width:90%"></div>
           </div>
         </div>
         <div class="info-block treatment">
-          <h4>Targeted Therapy</h4>
+          <h4>Targeted Therapy 靶向治疗</h4>
           <p>MDM2-p53 interaction inhibitors: Idasanutlin (RG7388), Milademetan (DS-3032b), Siremadlin. Restore p53 by
             blocking MDM2 binding. Clinical trials; milademetan approved in some regions.</p>
         </div>
@@ -777,7 +777,7 @@
         Point Mutation (AKT1 E17K) / Amplification
       </div>
       <div class="diagram-wrap">
-        <div class="diagram-label">Mechanism</div>
+        <div class="diagram-label">Mechanism 机制图</div>
         <div class="diagram-box">
           <svg viewBox="0 0 300 130">
             <!-- Normal -->
@@ -807,24 +807,24 @@
       </div>
       <div class="card-body">
         <div class="info-block">
-          <h4>Normal Function</h4>
-          <p>Serine/threonine kinase: central node downstream of PI3K. Phosphorylates targets (mTOR, GSK3β,
+          <h4>Normal Function 正常功能</h4>
+          <p>Serine/threonine kinase (丝氨酸/苏氨酸激酶): central node downstream of PI3K. Phosphorylates targets (mTOR, GSK3β,
             BAD, FoxO) to promote survival, growth, glucose uptake, and metabolism.</p>
         </div>
         <div class="info-block">
-          <h4>Mutation Effect</h4>
+          <h4>Mutation Effect 突变影响</h4>
           <p>AKT1 E17K mutation in PH domain → constitutive plasma membrane recruitment independent of PIP3 → persistent
             phosphorylation/activation. AKT2/AKT3 amplification → overexpression → pathway hyperactivation.</p>
         </div>
         <div class="info-block cancer">
-          <h4>Common Cancer</h4>
+          <h4>Common Cancer 常见癌症</h4>
           <p>Breast cancer (AKT1 E17K) ~3–5%; also ovarian, colorectal</p>
           <div class="freq-bar">
             <div class="freq-fill" style="width:5%"></div>
           </div>
         </div>
         <div class="info-block treatment">
-          <h4>Targeted Therapy</h4>
+          <h4>Targeted Therapy 靶向治疗</h4>
           <p>Capivasertib (Truqap) — AKT inhibitor approved for HR+/HER2− breast cancer with PIK3CA/AKT1/PTEN
             alteration. Ipatasertib, Afuresertib in trials.</p>
         </div>
@@ -846,7 +846,7 @@
         Amplification / Translocation t(11;14)
       </div>
       <div class="diagram-wrap">
-        <div class="diagram-label">Mechanism</div>
+        <div class="diagram-label">Mechanism 机制图</div>
         <div class="diagram-box">
           <svg viewBox="0 0 300 130">
             <!-- Normal -->
@@ -876,25 +876,25 @@
       </div>
       <div class="card-body">
         <div class="info-block">
-          <h4>Normal Function</h4>
-          <p>Regulatory subunit: binds and activates CDK4/6. Cyclin D-CDK4/6 complex phosphorylates Rb protein →
+          <h4>Normal Function 正常功能</h4>
+          <p>Regulatory subunit (调节亚基): binds and activates CDK4/6. Cyclin D-CDK4/6 complex phosphorylates Rb protein →
             releases E2F transcription factor → drives G1→S phase transition. Mitogen-responsive.</p>
         </div>
         <div class="info-block">
-          <h4>Mutation Effect</h4>
+          <h4>Mutation Effect 突变影响</h4>
           <p>CCND1 amplification or t(11;14) translocation (IgH enhancer in mantle cell lymphoma) → Cyclin D1
             overexpression → excessive CDK4/6 activation → Rb constitutively phosphorylated → uncontrolled G1/S
             progression and proliferation.</p>
         </div>
         <div class="info-block cancer">
-          <h4>Common Cancer</h4>
+          <h4>Common Cancer 常见癌症</h4>
           <p>Mantle cell lymphoma ~100% (t(11;14))</p>
           <div class="freq-bar">
             <div class="freq-fill" style="width:100%"></div>
           </div>
         </div>
         <div class="info-block treatment">
-          <h4>Targeted Therapy</h4>
+          <h4>Targeted Therapy 靶向治疗</h4>
           <p>CDK4/6 inhibitors (indirectly target Cyclin D pathway): Palbociclib (Ibrance), Ribociclib (Kisqali),
             Abemaciclib (Verzenio) — standard for HR+/HER2− metastatic breast cancer.</p>
         </div>
@@ -916,7 +916,7 @@
         Amplification / Overexpression
       </div>
       <div class="diagram-wrap">
-        <div class="diagram-label">Mechanism</div>
+        <div class="diagram-label">Mechanism 机制图</div>
         <div class="diagram-box">
           <svg viewBox="0 0 300 130">
             <!-- Normal -->
@@ -954,24 +954,24 @@
       </div>
       <div class="card-body">
         <div class="info-block">
-          <h4>Normal Function</h4>
-          <p>Serine/threonine kinase: partners with Cyclin D to phosphorylate Rb in G1 phase, promoting cell
+          <h4>Normal Function 正常功能</h4>
+          <p>Serine/threonine kinase (丝氨酸/苏氨酸激酶): partners with Cyclin D to phosphorylate Rb in G1 phase, promoting cell
             cycle entry. Also has kinase-independent roles in hematopoiesis and immune regulation.</p>
         </div>
         <div class="info-block">
-          <h4>Mutation Effect</h4>
+          <h4>Mutation Effect 突变影响</h4>
           <p>Gene amplification or transcriptional upregulation → excess CDK6 protein → increased Rb phosphorylation
             even without sufficient mitogenic signals → accelerated G1/S transition and unchecked proliferation.</p>
         </div>
         <div class="info-block cancer">
-          <h4>Common Cancer</h4>
+          <h4>Common Cancer 常见癌症</h4>
           <p>Glioblastoma ~10% (CDK6 amplification); also lymphoma, leukemia</p>
           <div class="freq-bar">
             <div class="freq-fill" style="width:10%"></div>
           </div>
         </div>
         <div class="info-block treatment">
-          <h4>Targeted Therapy</h4>
+          <h4>Targeted Therapy 靶向治疗</h4>
           <p>CDK4/6 inhibitors: Palbociclib, Ribociclib, Abemaciclib. Abemaciclib has higher CDK6 selectivity. Used in
             HR+/HER2− breast cancer; trials in glioblastoma and lymphoma.</p>
         </div>
@@ -992,7 +992,7 @@
         Point Mutation (N-terminal, S33/S37/T41/S45)
       </div>
       <div class="diagram-wrap">
-        <div class="diagram-label">Mechanism</div>
+        <div class="diagram-label">Mechanism 机制图</div>
         <div class="diagram-box">
           <svg viewBox="0 0 300 130">
             <!-- Normal -->
@@ -1022,26 +1022,26 @@
       </div>
       <div class="card-body">
         <div class="info-block">
-          <h4>Normal Function</h4>
-          <p>Dual-function protein: (1) Cell adhesion — links cadherins to actin cytoskeleton; (2) Wnt
+          <h4>Normal Function 正常功能</h4>
+          <p>Dual-function protein (双重功能蛋白): (1) Cell adhesion — links cadherins to actin cytoskeleton; (2) Wnt
             signaling effector — when stabilized, translocates to nucleus and co-activates TCF/LEF transcription of
             proliferation genes.</p>
         </div>
         <div class="info-block">
-          <h4>Mutation Effect</h4>
+          <h4>Mutation Effect 突变影响</h4>
           <p>N-terminal missense mutations destroy GSK3β phosphorylation sites (S33, S37, T41, S45) → β-catenin escapes
             ubiquitination and proteasomal degradation → accumulates in nucleus → constitutive Wnt target gene
             transcription independent of Wnt ligand.</p>
         </div>
         <div class="info-block cancer">
-          <h4>Common Cancer</h4>
+          <h4>Common Cancer 常见癌症</h4>
           <p>Hepatocellular carcinoma ~20–30%; also desmoid tumors, endometrial</p>
           <div class="freq-bar">
             <div class="freq-fill" style="width:25%"></div>
           </div>
         </div>
         <div class="info-block treatment">
-          <h4>Targeted Therapy</h4>
+          <h4>Targeted Therapy 靶向治疗</h4>
           <p>No FDA-approved direct β-catenin inhibitor. Wnt pathway inhibitors in trials: Porcupine inhibitors
             (LGK974/WNT974), tankyrase inhibitors, BC2059 (tegatrabetan). Surgery/NSAIDs for desmoid.</p>
         </div>
@@ -1063,7 +1063,7 @@
         Amplification (HER2+) / Point Mutation
       </div>
       <div class="diagram-wrap">
-        <div class="diagram-label">Mechanism</div>
+        <div class="diagram-label">Mechanism 机制图</div>
         <div class="diagram-box">
           <svg viewBox="0 0 300 130">
             <!-- Normal -->
@@ -1096,25 +1096,25 @@
       </div>
       <div class="card-body">
         <div class="info-block">
-          <h4>Normal Function</h4>
-          <p>Receptor tyrosine kinase: EGFR/ERBB family member. No known ligand; preferred heterodimerization
+          <h4>Normal Function 正常功能</h4>
+          <p>Receptor tyrosine kinase (受体酪氨酸激酶): EGFR/ERBB family member. No known ligand; preferred heterodimerization
             partner for HER1/3/4. Activates PI3K/AKT and RAS/MAPK pathways to drive proliferation and survival.</p>
         </div>
         <div class="info-block">
-          <h4>Mutation Effect</h4>
+          <h4>Mutation Effect 突变影响</h4>
           <p>ERBB2 gene amplification → 10–100× more HER2 protein on cell surface → spontaneous homodimerization and
             constitutive kinase activation without ligand → persistent downstream signaling → aggressive proliferation
             and survival.</p>
         </div>
         <div class="info-block cancer">
-          <h4>Common Cancer</h4>
+          <h4>Common Cancer 常见癌症</h4>
           <p>Breast cancer ~15–20% (HER2+ subtype)</p>
           <div class="freq-bar">
             <div class="freq-fill" style="width:18%"></div>
           </div>
         </div>
         <div class="info-block treatment">
-          <h4>Targeted Therapy</h4>
+          <h4>Targeted Therapy 靶向治疗</h4>
           <p>Trastuzumab (Herceptin), Pertuzumab, T-DM1 (Kadcyla), T-DXd (Enhertu), Lapatinib, Neratinib, Tucatinib,
             Margetuximab. HER2 is one of the most successfully targeted oncoproteins.</p>
         </div>
@@ -1136,7 +1136,7 @@
         Stabilization / Overexpression (rare direct mutation)
       </div>
       <div class="diagram-wrap">
-        <div class="diagram-label">Mechanism</div>
+        <div class="diagram-label">Mechanism 机制图</div>
         <div class="diagram-box">
           <svg viewBox="0 0 300 130">
             <!-- Normal (normoxia) -->
@@ -1168,26 +1168,26 @@
       </div>
       <div class="card-body">
         <div class="info-block">
-          <h4>Normal Function</h4>
-          <p>Transcription factor α-subunit: master regulator of cellular response to hypoxia.
+          <h4>Normal Function 正常功能</h4>
+          <p>Transcription factor α-subunit (转录因子α亚基): master regulator of cellular response to hypoxia (低氧).
             Heterodimerizes with HIF-1β (ARNT) to activate genes for angiogenesis (VEGF), glycolysis (GLUT1),
             erythropoiesis (EPO), and survival.</p>
         </div>
         <div class="info-block">
-          <h4>Mutation Effect</h4>
+          <h4>Mutation Effect 突变影响</h4>
           <p>Rarely directly mutated. Typically stabilized by VHL loss-of-function (see VHL card) or tumor hypoxia.
             Under normoxia, HIF-1α is hydroxylated and VHL-targeted for degradation. Loss of VHL → HIF-1α constitutively
             stable → pseudo-hypoxic response → angiogenesis and metabolic reprogramming fueling tumor growth.</p>
         </div>
         <div class="info-block cancer">
-          <h4>Common Cancer</h4>
+          <h4>Common Cancer 常见癌症</h4>
           <p>Clear cell renal cell carcinoma (via VHL loss) ~70–90%</p>
           <div class="freq-bar">
             <div class="freq-fill" style="width:80%"></div>
           </div>
         </div>
         <div class="info-block treatment">
-          <h4>Targeted Therapy</h4>
+          <h4>Targeted Therapy 靶向治疗</h4>
           <p>Indirect: Anti-angiogenics (Bevacizumab anti-VEGF, Sunitinib, Pazopanib, Axitinib). HIF-2α-specific
             inhibitor Belzutifan (Welireg) approved for VHL disease/ccRCC (targets HIF2A paralog, not HIF1A directly).
           </p>
@@ -1210,7 +1210,7 @@
         Deletion / Downregulation / Epigenetic silencing
       </div>
       <div class="diagram-wrap">
-        <div class="diagram-label">Mechanism</div>
+        <div class="diagram-label">Mechanism 机制图</div>
         <div class="diagram-box">
           <svg viewBox="0 0 300 130">
             <!-- Normal -->
@@ -1246,26 +1246,26 @@
       </div>
       <div class="card-body">
         <div class="info-block">
-          <h4>Normal Function</h4>
-          <p>CDK inhibitor (CIP/KIP family): p53 transcriptional target. Binds and inhibits Cyclin E/A-CDK2 and
+          <h4>Normal Function 正常功能</h4>
+          <p>CDK inhibitor (CDK抑制因子, CIP/KIP family): p53 transcriptional target. Binds and inhibits Cyclin E/A-CDK2 and
             Cyclin D-CDK4/6 complexes → enforces G1 cell cycle arrest after DNA damage, allowing repair. Also promotes
             senescence and differentiation.</p>
         </div>
         <div class="info-block">
-          <h4>Mutation Effect</h4>
+          <h4>Mutation Effect 突变影响</h4>
           <p>Rarely somatically mutated; more often downregulated via deletion, epigenetic silencing, or p53 dysfunction
             (since p21 is a p53 target). Loss → CDK complexes remain active → defective G1/S checkpoint → cells with
             damaged DNA proceed to replicate → genomic instability and tumor progression.</p>
         </div>
         <div class="info-block cancer">
-          <h4>Common Cancer</h4>
+          <h4>Common Cancer 常见癌症</h4>
           <p>Various cancers with p53 pathway dysfunction; reduced in endometrial, prostate, lung</p>
           <div class="freq-bar">
             <div class="freq-fill" style="width:30%"></div>
           </div>
         </div>
         <div class="info-block treatment">
-          <h4>Targeted Therapy</h4>
+          <h4>Targeted Therapy 靶向治疗</h4>
           <p>No direct p21-targeted drug. Indirect strategies: p53 gene therapy (restores p21 transcription), MDM2
             inhibitors (raise p53 → p21), CDK4/6 inhibitors (compensate for lost p21 inhibition). Histone deacetylase
             inhibitors can re-express p21.</p>
@@ -1288,7 +1288,7 @@
         Truncating Mutation (nonsense/frameshift) · LOH
       </div>
       <div class="diagram-wrap">
-        <div class="diagram-label">Mechanism</div>
+        <div class="diagram-label">Mechanism 机制图</div>
         <div class="diagram-box">
           <svg viewBox="0 0 300 130">
             <!-- Normal -->
@@ -1321,26 +1321,26 @@
       </div>
       <div class="card-body">
         <div class="info-block">
-          <h4>Normal Function</h4>
-          <p>Scaffold tumor suppressor: core component of β-catenin destruction complex (with Axin, GSK3β,
+          <h4>Normal Function 正常功能</h4>
+          <p>Scaffold tumor suppressor (支架抑癌蛋白): core component of β-catenin destruction complex (with Axin, GSK3β,
             CK1α). Binds and phosphorylates β-catenin → ubiquitination → degradation. Also regulates cell migration,
             adhesion, and chromosome segregation.</p>
         </div>
         <div class="info-block">
-          <h4>Mutation Effect</h4>
+          <h4>Mutation Effect 突变影响</h4>
           <p>Truncating mutations (nonsense/frameshift) remove β-catenin binding/SAMP repeats → destruction complex
             cannot assemble → β-catenin escapes degradation → nuclear accumulation → constitutive Wnt target gene
             transcription (MYC, CCND1) → uncontrolled proliferation of intestinal epithelium → adenoma formation.</p>
         </div>
         <div class="info-block cancer">
-          <h4>Common Cancer</h4>
+          <h4>Common Cancer 常见癌症</h4>
           <p>Colorectal cancer ~80% (sporadic); FAP (germline, 100% lifetime risk)</p>
           <div class="freq-bar">
             <div class="freq-fill" style="width:80%"></div>
           </div>
         </div>
         <div class="info-block treatment">
-          <h4>Targeted Therapy</h4>
+          <h4>Targeted Therapy 靶向治疗</h4>
           <p>No direct APC-targeted therapy. Wnt pathway inhibitors in clinical trials (Porcupine inhibitors, tankyrase
             inhibitors). FAP management: endoscopic surveillance, prophylactic colectomy, NSAIDs (sulindac, celecoxib)
             reduce polyp burden. Standard CRC chemo.</p>
@@ -1363,7 +1363,7 @@
         Germline/Somatic Loss-of-Function · Deletion
       </div>
       <div class="diagram-wrap">
-        <div class="diagram-label">Mechanism</div>
+        <div class="diagram-label">Mechanism 机制图</div>
         <div class="diagram-box">
           <svg viewBox="0 0 300 130">
             <!-- Normal -->
@@ -1396,19 +1396,19 @@
       </div>
       <div class="card-body">
         <div class="info-block">
-          <h4>Normal Function</h4>
-          <p>DNA repair protein: tumor suppressor critical for homologous recombination (HR) repair of DNA
+          <h4>Normal Function 正常功能</h4>
+          <p>DNA repair protein (DNA修复蛋白): tumor suppressor critical for homologous recombination (HR) repair of DNA
             double-strand breaks. Recruits RAD51 to break sites, interacts with BRCA2/PALB2, enforces cell cycle
             checkpoints (G2/M), and maintains genomic stability.</p>
         </div>
         <div class="info-block">
-          <h4>Mutation Effect</h4>
+          <h4>Mutation Effect 突变影响</h4>
           <p>Loss-of-function mutations (truncating, missense in BRCT/RING domains) → defective HR repair → cells rely
             on error-prone non-homologous end joining (NHEJ) → accumulation of chromosomal rearrangements, deletions,
             and mutations → genomic instability ("BRCAness") → malignant transformation.</p>
         </div>
         <div class="info-block cancer">
-          <h4>Common Cancer</h4>
+          <h4>Common Cancer 常见癌症</h4>
           <p>Hereditary breast & ovarian cancer (HBOC): breast ~55–65%, ovarian ~39% (germline carriers)</p>
           <div class="freq-bar">
             <div class="freq-fill" style="width:60%"></div>
@@ -1416,7 +1416,7 @@
         </div>
         <div class="info-block treatment">
           <h4>Targeted Therapy 靶向治疗</h4>
-          <p>PARP inhibitors (synthetic lethality): Olaparib (Lynparza), Talazoparib (Talzenna), Niraparib
+          <p>PARP inhibitors (合成致死 synthetic lethality): Olaparib (Lynparza), Talazoparib (Talzenna), Niraparib
             (Zejula), Rucaparib (Rubraca). Platinum-based chemotherapy (cisplatin/carboplatin) also effective due to HR
             deficiency. Preventive surgery for high-risk carriers.</p>
         </div>
@@ -1437,7 +1437,7 @@
         Missense Mutation (dominant-negative / GOF) · Most mutated gene in cancer
       </div>
       <div class="diagram-wrap">
-        <div class="diagram-label">Mechanism</div>
+        <div class="diagram-label">Mechanism 机制图</div>
         <div class="diagram-box">
           <svg viewBox="0 0 300 130">
             <!-- Normal -->
@@ -1469,20 +1469,20 @@
       </div>
       <div class="card-body">
         <div class="info-block">
-          <h4>Normal Function</h4>
-          <p>"Guardian of the genome": transcription factor and tumor suppressor. Activated by DNA damage,
+          <h4>Normal Function 正常功能</h4>
+          <p>"Guardian of the genome" (基因组守护者): transcription factor and tumor suppressor. Activated by DNA damage,
             oncogene stress, hypoxia → transcribes p21 (cell cycle arrest), BAX/PUMA (apoptosis), GADD45 (DNA repair),
             and senescence genes. Eliminates or repairs damaged cells.</p>
         </div>
         <div class="info-block">
-          <h4>Mutation Effect</h4>
+          <h4>Mutation Effect 突变影响</h4>
           <p>Mostly missense mutations in DNA-binding domain (hotspots R175, G245, R248, R249, R273, R282). Three
             effects: (1) Loss of tumor suppressor function; (2) Dominant-negative — mutant p53 monomers poison wildtype
             tetramers; (3) Gain-of-function (GOF) — mutant protein acquires new oncogenic activities promoting
             metastasis, drug resistance, and metabolism changes.</p>
         </div>
         <div class="info-block cancer">
-          <h4>Common Cancer</h4>
+          <h4>Common Cancer 常见癌症</h4>
           <p>~50% of all human cancers. High-grade serous ovarian ~96%; also lung, HNSCC, colorectal. Li-Fraumeni
             syndrome (germline)</p>
           <div class="freq-bar">
@@ -1490,7 +1490,7 @@
           </div>
         </div>
         <div class="info-block treatment">
-          <h4>Targeted Therapy</h4>
+          <h4>Targeted Therapy 靶向治疗</h4>
           <p>No universally approved direct p53 drug. APR-246/Eprenetapopt (mutant p53 reactivator, approved in some
             countries). MDM2 inhibitors (for WT p53 tumors: idasanutlin, siremadlin). p53 vaccine and gene therapy
             (Gendicine in China) in use/trials. Most cancers rely on chemo/immunotherapy.</p>
@@ -1513,7 +1513,7 @@
         Loss-of-Function Mutation · Deletion · Epigenetic silencing
       </div>
       <div class="diagram-wrap">
-        <div class="diagram-label">Mechanism</div>
+        <div class="diagram-label">Mechanism 机制图</div>
         <div class="diagram-box">
           <svg viewBox="0 0 300 130">
             <!-- Normal -->
@@ -1546,20 +1546,20 @@
       </div>
       <div class="card-body">
         <div class="info-block">
-          <h4>Normal Function</h4>
-          <p>Lipid phosphatase: major antagonist of PI3K/AKT pathway. Dephosphorylates PIP3 → PIP2 at the plasma
+          <h4>Normal Function 正常功能</h4>
+          <p>Lipid phosphatase (脂质磷酸酶): major antagonist of PI3K/AKT pathway. Dephosphorylates PIP3 → PIP2 at the plasma
             membrane, removing the docking site for AKT and PDK1. Keeps AKT activity in check, restraining proliferation
             and survival. Also has nuclear and protein phosphatase functions.</p>
         </div>
         <div class="info-block">
-          <h4>Mutation Effect</h4>
+          <h4>Mutation Effect 突变影响</h4>
           <p>Loss-of-function (missense in phosphatase domain, truncating, deletion, promoter methylation) → loss of
             PIP3 phosphatase activity → PIP3 accumulates at membrane → constitutive AKT recruitment and activation →
             enhanced mTOR signaling, glucose metabolism, survival, and proliferation. Even partial loss
             (haploinsufficiency) promotes tumorigenesis.</p>
         </div>
         <div class="info-block cancer">
-          <h4>Common Cancer</h4>
+          <h4>Common Cancer 常见癌症</h4>
           <p>Glioblastoma (primary) ~40%; Endometrial ~30–50%; also prostate, breast, thyroid. Cowden syndrome
             (germline)</p>
           <div class="freq-bar">
@@ -1567,7 +1567,7 @@
           </div>
         </div>
         <div class="info-block treatment">
-          <h4>Targeted Therapy</h4>
+          <h4>Targeted Therapy 靶向治疗</h4>
           <p>Indirect targeting of downstream PI3K/AKT/mTOR axis: Everolimus/Temsirolimus (mTOR inhibitors, approved for
             subependymal giant cell astrocytoma in TSC, renal cell carcinoma, breast cancer). Alpelisib (PI3Kα
             inhibitor). AKT inhibitors (capivasertib). No direct PTEN restoration therapy approved.</p>
@@ -1590,7 +1590,7 @@
         Germline/Somatic Loss-of-Function · Promoter methylation
       </div>
       <div class="diagram-wrap">
-        <div class="diagram-label">Mechanism</div>
+        <div class="diagram-label">Mechanism 机制图</div>
         <div class="diagram-box">
           <svg viewBox="0 0 300 130">
             <!-- Normal (normoxia) -->
@@ -1623,27 +1623,27 @@
       </div>
       <div class="card-body">
         <div class="info-block">
-          <h4>Normal Function</h4>
-          <p>Substrate recognition subunit of E3 ubiquitin ligase: VCB-CUL2 complex. Under normoxia,
+          <h4>Normal Function 正常功能</h4>
+          <p>Substrate recognition subunit of E3 ubiquitin ligase (E3泛素连接酶底物识别亚基): VCB-CUL2 complex. Under normoxia,
             HIF-α subunits are prolyl-hydroxylated (oxygen-dependent). VHL recognizes hydroxylated HIF-α → ubiquitinates
             → proteasomal degradation. Ensures hypoxic response genes are OFF when oxygen is available.</p>
         </div>
         <div class="info-block">
-          <h4>Mutation Effect</h4>
+          <h4>Mutation Effect 突变影响</h4>
           <p>Loss-of-function (missense in HIF-binding domain, truncating, deletion, promoter hypermethylation) → VHL
             cannot bind hydroxylated HIF-α → HIF-1α/HIF-2α escape degradation even under normoxia → constitutive
             "pseudo-hypoxic" transcriptional program → VEGF-driven angiogenesis, glycolytic switch (Warburg),
             erythropoiesis → highly vascular tumors.</p>
         </div>
         <div class="info-block cancer">
-          <h4>Common Cancer</h4>
+          <h4>Common Cancer 常见癌症</h4>
           <p>Clear cell renal cell carcinoma ~90% have VHL inactivation (~70–80% somatic mutation)</p>
           <div class="freq-bar">
             <div class="freq-fill" style="width:85%"></div>
           </div>
         </div>
         <div class="info-block treatment">
-          <h4>Targeted Therapy</h4>
+          <h4>Targeted Therapy 靶向治疗</h4>
           <p>Belzutifan (Welireg) — HIF-2α inhibitor, first-in-class, approved for VHL disease-associated tumors and
             advanced ccRCC. Anti-angiogenics: Sunitinib, Pazopanib, Axitinib, Bevacizumab (anti-VEGF). mTOR inhibitors:
             Everolimus, Temsirolimus. Immune checkpoint inhibitors increasingly used.</p>
@@ -1666,7 +1666,7 @@
         Translocation t(8;21) · Loss-of-Function Mutation
       </div>
       <div class="diagram-wrap">
-        <div class="diagram-label">Mechanism</div>
+        <div class="diagram-label">Mechanism 机制图</div>
         <div class="diagram-box">
           <svg viewBox="0 0 300 130">
             <!-- Normal -->
@@ -1700,13 +1700,13 @@
       </div>
       <div class="card-body">
         <div class="info-block">
-          <h4>Normal Function</h4>
-          <p>Master transcription factor: alpha subunit of Core Binding Factor (CBF), heterodimerizes with
+          <h4>Normal Function 正常功能</h4>
+          <p>Master transcription factor (核心转录因子): alpha subunit of Core Binding Factor (CBF), heterodimerizes with
             CBFβ. Essential for definitive hematopoiesis — regulates differentiation of myeloid and lymphoid lineages by
             activating genes for myeloid maturation, T-cell development, and megakaryocyte differentiation.</p>
         </div>
         <div class="info-block">
-          <h4>Mutation Effect</h4>
+          <h4>Mutation Effect 突变影响</h4>
           <p>Two mechanisms: (1) Translocation t(8;21)(q22;q22) → RUNX1-RUNX1T1 (ETO) fusion protein — acts as
             dominant-negative transcriptional repressor, blocking myeloid differentiation; (2) Loss-of-function point
             mutations/deletions → impaired hematopoietic differentiation. Both result in accumulation of immature
@@ -1714,14 +1714,14 @@
             progression.</p>
         </div>
         <div class="info-block cancer">
-          <h4>Common Cancer</h4>
+          <h4>Common Cancer 常见癌症</h4>
           <p>Acute Myeloid Leukemia (AML): t(8;21) ~10–15% of AML; RUNX1 mutations ~10–15%</p>
           <div class="freq-bar">
             <div class="freq-fill" style="width:13%"></div>
           </div>
         </div>
         <div class="info-block treatment">
-          <h4>Targeted Therapy</h4>
+          <h4>Targeted Therapy 靶向治疗</h4>
           <p>No direct RUNX1-targeted therapy approved. t(8;21) AML (favorable-risk) treated with standard chemotherapy:
             Cytarabine + Anthracycline ("7+3"), high-dose cytarabine consolidation. Gemtuzumab ozogamicin (anti-CD33
             ADC) added in some regimens. Allogeneic HSCT for high-risk. RUNX1 inhibitors and degraders in early clinical
